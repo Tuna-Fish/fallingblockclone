@@ -15,6 +15,9 @@ fn main() {
         .init_resource::<PieceBag>()
         .init_resource::<GravityTimer>()
         .init_resource::<GameState>()
+        .init_resource::<AppMode>()
+        .init_resource::<HighScores>()
+        .init_resource::<CurrentName>()
         .add_systems(Startup, setup_terminal)
         .add_systems(
             Update,

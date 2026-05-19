@@ -1,4 +1,6 @@
-use crate::logic::{Board, CurrentPiece, GameState, BOARD_HEIGHT, BOARD_WIDTH};
+use crate::logic::{
+    AppMode, Board, CurrentName, CurrentPiece, GameState, HighScores, BOARD_HEIGHT, BOARD_WIDTH,
+};
 use bevy::prelude::*;
 use ratatui::{
     backend::CrosstermBackend,
@@ -39,6 +41,9 @@ pub fn render_system(
     piece_query: Query<&CurrentPiece>,
     game_state: Res<GameState>,
     timer: Res<crate::logic::GravityTimer>,
+    app_mode: Res<AppMode>,
+    high_scores: Res<HighScores>,
+    current_name: Res<CurrentName>,
 ) {
     tui.terminal
         .draw(|f| {
@@ -50,63 +55,80 @@ pub fn render_system(
                 ])
                 .split(f.size());
 
-            let vertical_chunks = Layout::default()
-                .direction(Direction::Vertical)
-                .constraints([
-                    Constraint::Length(BOARD_HEIGHT as u16 + 2),
-                    Constraint::Min(0),
-                ])
-                .split(chunks[0]);
+            match *app_mode {
+                AppMode::Playing => {
+                    let vertical_chunks = Layout::default()
+                        .direction(Direction::Vertical)
+                        .constraints([
+                            Constraint::Length(BOARD_HEIGHT as u16 + 2),
+                            Constraint::Min(0),
+                        ])
+                        .split(chunks[0]);
 
-            let mut board_display = vec![vec![' '; BOARD_WIDTH]; BOARD_HEIGHT];
-
-            // Draw locked pieces
-            for y in 0..BOARD_HEIGHT {
-                for x in 0..BOARD_WIDTH {
-                    if board.grid[y][x].is_some() {
-                        board_display[y][x] = '#';
+                    let mut board_display = vec![vec![' '; BOARD_WIDTH]; BOARD_HEIGHT];
+                    for y in 0..BOARD_HEIGHT {
+                        for x in 0..BOARD_WIDTH {
+                            if board.grid[y][x].is_some() {
+                                board_display[y][x] = '#';
+                            }
+                        }
                     }
-                }
-            }
-
-            // Draw current piece
-            if let Ok(piece) = piece_query.get_single() {
-                for (dx, dy) in piece.piece_type.coordinates(piece.rotation) {
-                    let nx = piece.x + dx;
-                    let ny = piece.y + dy;
-                    if nx >= 0 && nx < BOARD_WIDTH as i32 && ny >= 0 && ny < BOARD_HEIGHT as i32 {
-                        board_display[ny as usize][nx as usize] = '@';
+                    if let Ok(piece) = piece_query.get_single() {
+                        for (dx, dy) in piece.piece_type.coordinates(piece.rotation) {
+                            let nx = piece.x + dx;
+                            let ny = piece.y + dy;
+                            if nx >= 0 && nx < BOARD_WIDTH as i32 && ny >= 0 && ny < BOARD_HEIGHT as i32 {
+                                board_display[ny as usize][nx as usize] = '@';
+                            }
+                        }
                     }
+                    let mut content = String::new();
+                    for y in (0..BOARD_HEIGHT).rev() {
+                        for x in 0..BOARD_WIDTH {
+                            content.push(board_display[y][x]);
+                            content.push(' ');
+                        }
+                        content.push('\n');
+                    }
+                    let block = Block::default()
+                        .title("Tetris")
+                        .borders(Borders::ALL)
+                        .border_style(Style::default().fg(Color::Yellow));
+                    f.render_widget(Paragraph::new(content).block(block), vertical_chunks[0]);
+
+                    let info_content = format!(
+                        "Score: {}\nLines: {}\nSpeed: {:.2}s\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
+                        game_state.score,
+                        game_state.lines,
+                        timer.0.duration().as_secs_f32()
+                    );
+                    f.render_widget(Paragraph::new(info_content).block(Block::default().title("Info").borders(Borders::ALL)), chunks[1]);
+                }
+                AppMode::HighScore => {
+                    let mut content = String::from("--- HIGH SCORES ---\n\n");
+                    for (i, (name, score)) in high_scores.0.iter().enumerate() {
+                        content.push_str(&format!("{}. {:<10} {}\n", i + 1, name, score));
+                    }
+                    content.push_str("\n\nPress any Arrow key or Enter to Start");
+                    content.push_str(&format!("\n\nLast Score: {}", game_state.score));
+                    content.push_str("\n[Q]uit");
+
+                    f.render_widget(
+                        Paragraph::new(content).block(Block::default().title("High Scores").borders(Borders::ALL)),
+                        f.size(),
+                    );
+                }
+                AppMode::Naming => {
+                    let content = format!(
+                        "CONGRATULATIONS!\nYour score: {}\n\nEnter your name: {}\n\n[Enter] to submit",
+                        game_state.score, current_name.0
+                    );
+                    f.render_widget(
+                        Paragraph::new(content).block(Block::default().title("New High Score").borders(Borders::ALL)),
+                        f.size(),
+                    );
                 }
             }
-
-            let mut content = String::new();
-            for y in (0..BOARD_HEIGHT).rev() {
-                for x in 0..BOARD_WIDTH {
-                    content.push(board_display[y][x]);
-                    content.push(' ');
-                }
-                content.push('\n');
-            }
-
-            let block = Block::default()
-                .title("Tetris")
-                .borders(Borders::ALL)
-                .border_style(Style::default().fg(Color::Yellow));
-
-            let paragraph = Paragraph::new(content).block(block);
-            f.render_widget(paragraph, vertical_chunks[0]);
-
-            // Draw score
-            let info_content = format!(
-                "Score: {}\nLines: {}\nSpeed: {:.2}s\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
-                game_state.score,
-                game_state.lines,
-                timer.0.duration().as_secs_f32()
-            );
-            let info_block = Block::default().title("Info").borders(Borders::ALL);
-            let info_paragraph = Paragraph::new(info_content).block(info_block);
-            f.render_widget(info_paragraph, chunks[1]);
         })
         .unwrap();
 }
