@@ -25,6 +25,7 @@ fn main() {
         .init_resource::<AppMode>()
         .init_resource::<HighScores>()
         .init_resource::<CurrentName>()
+        .init_resource::<MovementTimer>()
         .add_systems(Startup, (setup_camera, setup_backgrounds, setup_ui))
         .add_systems(
             Update,

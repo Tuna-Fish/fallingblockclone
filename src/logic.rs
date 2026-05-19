@@ -100,6 +100,21 @@ pub fn save_scores(_scores: &[(String, u32)]) {
     // Stub
 }
 
+#[derive(Resource)]
+pub struct MovementTimer {
+    pub timer: Timer,
+    pub key: Option<KeyCode>,
+}
+
+impl Default for MovementTimer {
+    fn default() -> Self {
+        Self {
+            timer: Timer::from_seconds(0.2, TimerMode::Once),
+            key: None,
+        }
+    }
+}
+
 #[derive(Resource, Default)]
 pub struct Board {
     pub grid: [[Option<PieceType>; BOARD_WIDTH]; BOARD_HEIGHT],
