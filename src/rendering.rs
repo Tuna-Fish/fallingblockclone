@@ -147,6 +147,7 @@ pub fn setup_ui(mut commands: Commands) {
                 style: Style {
                     width: Val::Percent(100.0),
                     height: Val::Percent(100.0),
+                    position_type: PositionType::Absolute,
                     flex_direction: FlexDirection::Column,
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::Center,
@@ -159,10 +160,10 @@ pub fn setup_ui(mut commands: Commands) {
         .with_children(|parent| {
             parent.spawn((
                 TextBundle::from_section(
-                    "",
+                    "INITIALIZING...",
                     TextStyle {
                         font_size: 40.0,
-                        color: Color::WHITE,
+                        color: Color::srgb(1.0, 1.0, 1.0),
                         ..default()
                     },
                 ),
