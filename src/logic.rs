@@ -172,7 +172,7 @@ pub struct GravityTimer(pub Timer);
 
 impl Default for GravityTimer {
     fn default() -> Self {
-        Self(Timer::from_seconds(0.5, TimerMode::Repeating))
+        Self(Timer::from_seconds(0.3, TimerMode::Repeating))
     }
 }
 
