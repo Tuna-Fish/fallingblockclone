@@ -330,24 +330,7 @@ pub fn handle_actions(
                         ) {
                             piece.y -= 1;
                         }
-                        board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
-                        commands.entity(entity).despawn();
-                        let cleared = board.clear_lines();
-                        if cleared > 0 {
-                            let old_lines = game_state.lines;
-                            game_state.lines += cleared;
-                            game_state.score += cleared * 10;
-                            match cleared {
-                                2 => game_state.score += 2,
-                                3 => game_state.score += 3,
-                                4 => game_state.score += 5,
-                                _ => {}
-                            }
-                            if game_state.lines / 10 > old_lines / 10 {
-                                let new_duration = timer.0.duration().mul_f32(0.9);
-                                timer.0.set_duration(new_duration);
-                            }
-                        }
+                        timer.0.reset();
                     }
                     GameAction::GravityStep => {
                         if !board.is_colliding(
