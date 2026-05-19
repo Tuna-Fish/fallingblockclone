@@ -1,4 +1,4 @@
-use crate::logic::{Board, CurrentPiece, BOARD_HEIGHT, BOARD_WIDTH};
+use crate::logic::{Board, CurrentPiece, GameState, BOARD_HEIGHT, BOARD_WIDTH};
 use bevy::prelude::*;
 use ratatui::{
     backend::CrosstermBackend,
@@ -37,6 +37,7 @@ pub fn render_system(
     mut tui: ResMut<TuiTerminal>,
     board: Res<Board>,
     piece_query: Query<&CurrentPiece>,
+    game_state: Res<GameState>,
 ) {
     tui.terminal
         .draw(|f| {
@@ -44,7 +45,7 @@ pub fn render_system(
                 .direction(Direction::Horizontal)
                 .constraints([
                     Constraint::Length(BOARD_WIDTH as u16 * 2 + 2),
-                    Constraint::Min(0),
+                    Constraint::Min(20),
                 ])
                 .split(f.size());
 
@@ -94,6 +95,15 @@ pub fn render_system(
 
             let paragraph = Paragraph::new(content).block(block);
             f.render_widget(paragraph, vertical_chunks[0]);
+
+            // Draw score
+            let info_content = format!(
+                "Score: {}\nLines: {}\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
+                game_state.score, game_state.lines
+            );
+            let info_block = Block::default().title("Info").borders(Borders::ALL);
+            let info_paragraph = Paragraph::new(info_content).block(info_block);
+            f.render_widget(info_paragraph, chunks[1]);
         })
         .unwrap();
 }

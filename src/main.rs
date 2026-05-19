@@ -14,6 +14,7 @@ fn main() {
         .init_resource::<Board>()
         .init_resource::<PieceBag>()
         .init_resource::<GravityTimer>()
+        .init_resource::<GameState>()
         .add_systems(Startup, setup_terminal)
         .add_systems(
             Update,

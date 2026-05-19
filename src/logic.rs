@@ -73,6 +73,12 @@ pub struct CurrentPiece {
 }
 
 #[derive(Resource, Default)]
+pub struct GameState {
+    pub lines: u32,
+    pub score: u32,
+}
+
+#[derive(Resource, Default)]
 pub struct Board {
     pub grid: [[Option<PieceType>; BOARD_WIDTH]; BOARD_HEIGHT],
 }
@@ -178,6 +184,7 @@ pub fn handle_actions(
     mut board: ResMut<Board>,
     mut piece_query: Query<(Entity, &mut CurrentPiece)>,
     mut commands: Commands,
+    mut game_state: ResMut<GameState>,
 ) {
     let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
         return;
@@ -201,7 +208,14 @@ pub fn handle_actions(
                 }
                 board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
                 commands.entity(entity).despawn();
-                board.clear_lines();
+                let cleared = board.clear_lines();
+                if cleared > 0 {
+                    game_state.lines += cleared;
+                    game_state.score += cleared;
+                    if cleared >= 2 {
+                        game_state.score += 1;
+                    }
+                }
                 return;
             }
             GameAction::GravityStep => {
@@ -210,7 +224,14 @@ pub fn handle_actions(
                 } else {
                     board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
                     commands.entity(entity).despawn();
-                    board.clear_lines();
+                    let cleared = board.clear_lines();
+                    if cleared > 0 {
+                        game_state.lines += cleared;
+                        game_state.score += cleared;
+                        if cleared >= 2 {
+                            game_state.score += 1;
+                        }
+                    }
                     return;
                 }
             }
