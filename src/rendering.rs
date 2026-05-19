@@ -48,6 +48,14 @@ pub fn render_system(
                 ])
                 .split(f.size());
 
+            let vertical_chunks = Layout::default()
+                .direction(Direction::Vertical)
+                .constraints([
+                    Constraint::Length(BOARD_HEIGHT as u16 + 2),
+                    Constraint::Min(0),
+                ])
+                .split(chunks[0]);
+
             let mut board_display = vec![vec![' '; BOARD_WIDTH]; BOARD_HEIGHT];
 
             // Draw locked pieces
@@ -85,7 +93,7 @@ pub fn render_system(
                 .border_style(Style::default().fg(Color::Yellow));
 
             let paragraph = Paragraph::new(content).block(block);
-            f.render_widget(paragraph, chunks[0]);
+            f.render_widget(paragraph, vertical_chunks[0]);
         })
         .unwrap();
 }

@@ -160,16 +160,6 @@ impl Board {
         }
         lines_cleared
     }
-
-    pub fn is_game_over(&self) -> bool {
-        // Simple check: if top row has anything
-        for x in 0..BOARD_WIDTH {
-            if self.grid[BOARD_HEIGHT - 1][x].is_some() {
-                return true;
-            }
-        }
-        false
-    }
 }
 
 pub fn apply_gravity(
@@ -187,7 +177,6 @@ pub fn handle_actions(
     mut board: ResMut<Board>,
     mut piece_query: Query<(Entity, &mut CurrentPiece)>,
     mut commands: Commands,
-    mut exit: EventWriter<bevy::app::AppExit>,
 ) {
     let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
         return;
@@ -212,9 +201,6 @@ pub fn handle_actions(
                     board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
                     commands.entity(entity).despawn();
                     board.clear_lines();
-                    if board.is_game_over() {
-                        exit.send(bevy::app::AppExit::Success);
-                    }
                     return;
                 }
             }
@@ -232,6 +218,8 @@ pub fn spawn_piece(
     mut commands: Commands,
     mut bag: ResMut<PieceBag>,
     current_piece: Query<Entity, With<CurrentPiece>>,
+    board: Res<Board>,
+    mut exit: EventWriter<bevy::app::AppExit>,
 ) {
     if !current_piece.is_empty() {
         return;
@@ -245,11 +233,20 @@ pub fn spawn_piece(
     }
 
     if let Some(piece_type) = bag.pieces.pop() {
+        let x = BOARD_WIDTH as i32 / 2 - 2;
+        let y = BOARD_HEIGHT as i32 - 4;
+        let rotation = 0;
+
+        if board.is_colliding(piece_type, x, y, rotation) {
+            exit.send(bevy::app::AppExit::Success);
+            return;
+        }
+
         commands.spawn(CurrentPiece {
             piece_type,
-            x: BOARD_WIDTH as i32 / 2 - 2,
-            y: BOARD_HEIGHT as i32 - 4,
-            rotation: 0,
+            x,
+            y,
+            rotation,
         });
     }
 }

@@ -3,9 +3,17 @@ use bevy::prelude::*;
 use crossterm::event::{self, Event, KeyCode};
 use std::time::Duration;
 
-pub fn terminal_input(mut actions: EventWriter<GameAction>) {
+pub fn terminal_input(
+    mut actions: EventWriter<GameAction>,
+    mut exit: EventWriter<bevy::app::AppExit>,
+) {
     if event::poll(Duration::from_millis(0)).unwrap_or(false) {
         if let Ok(Event::Key(key)) = event::read() {
+            if key.code == KeyCode::Char('q') {
+                exit.send(bevy::app::AppExit::Success);
+                return;
+            }
+
             let action = match key.code {
                 KeyCode::Left => Some(GameAction::MoveLeft),
                 KeyCode::Right => Some(GameAction::MoveRight),
