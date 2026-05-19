@@ -38,6 +38,7 @@ pub fn render_system(
     board: Res<Board>,
     piece_query: Query<&CurrentPiece>,
     game_state: Res<GameState>,
+    timer: Res<crate::logic::GravityTimer>,
 ) {
     tui.terminal
         .draw(|f| {
@@ -98,8 +99,10 @@ pub fn render_system(
 
             // Draw score
             let info_content = format!(
-                "Score: {}\nLines: {}\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
-                game_state.score, game_state.lines
+                "Score: {}\nLines: {}\nSpeed: {:.2}s\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
+                game_state.score,
+                game_state.lines,
+                timer.0.duration().as_secs_f32()
             );
             let info_block = Block::default().title("Info").borders(Borders::ALL);
             let info_paragraph = Paragraph::new(info_content).block(info_block);

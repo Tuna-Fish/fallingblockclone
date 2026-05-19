@@ -185,6 +185,7 @@ pub fn handle_actions(
     mut piece_query: Query<(Entity, &mut CurrentPiece)>,
     mut commands: Commands,
     mut game_state: ResMut<GameState>,
+    mut timer: ResMut<GravityTimer>,
 ) {
     let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
         return;
@@ -210,6 +211,7 @@ pub fn handle_actions(
                 commands.entity(entity).despawn();
                 let cleared = board.clear_lines();
                 if cleared > 0 {
+                    let old_lines = game_state.lines;
                     game_state.lines += cleared;
                     game_state.score += cleared * 10;
                     match cleared {
@@ -217,6 +219,12 @@ pub fn handle_actions(
                         3 => game_state.score += 3,
                         4 => game_state.score += 5,
                         _ => {}
+                    }
+
+                    // Speed up 10% every 10 lines
+                    if game_state.lines / 10 > old_lines / 10 {
+                        let new_duration = timer.0.duration().mul_f32(0.9);
+                        timer.0.set_duration(new_duration);
                     }
                 }
                 return;
@@ -229,6 +237,7 @@ pub fn handle_actions(
                     commands.entity(entity).despawn();
                     let cleared = board.clear_lines();
                     if cleared > 0 {
+                        let old_lines = game_state.lines;
                         game_state.lines += cleared;
                         game_state.score += cleared * 10;
                         match cleared {
@@ -236,6 +245,12 @@ pub fn handle_actions(
                             3 => game_state.score += 3,
                             4 => game_state.score += 5,
                             _ => {}
+                        }
+
+                        // Speed up 10% every 10 lines
+                        if game_state.lines / 10 > old_lines / 10 {
+                            let new_duration = timer.0.duration().mul_f32(0.9);
+                            timer.0.set_duration(new_duration);
                         }
                     }
                     return;
