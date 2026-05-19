@@ -92,12 +92,60 @@ pub struct HighScores(pub Vec<(String, u32)>);
 #[derive(Resource, Default)]
 pub struct CurrentName(pub String);
 
-pub fn load_scores(_scores: &mut Vec<(String, u32)>) {
-    // Stub
+fn get_scores_path() -> std::path::PathBuf {
+    #[cfg(target_os = "windows")]
+    {
+        if let Ok(user_profile) = std::env::var("USERPROFILE") {
+            return std::path::PathBuf::from(user_profile)
+                .join("AppData")
+                .join("LocalLow")
+                .join("tetrisclone.scores");
+        }
+    }
+    #[cfg(target_os = "linux")]
+    {
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::PathBuf::from(home)
+                .join(".local")
+                .join("state")
+                .join("tetrisclone.scores");
+        }
+    }
+    std::path::PathBuf::from("tetrisclone.scores")
 }
 
-pub fn save_scores(_scores: &[(String, u32)]) {
-    // Stub
+pub fn load_scores(scores: &mut Vec<(String, u32)>) {
+    let path = get_scores_path();
+    if let Ok(content) = std::fs::read_to_string(path) {
+        let mut new_scores = Vec::new();
+        for line in content.lines() {
+            if line.trim().is_empty() {
+                continue;
+            }
+            let parts: Vec<&str> = line.splitn(2, ' ').collect();
+            if parts.len() == 2 {
+                if let Ok(score) = parts[0].parse::<u32>() {
+                    new_scores.push((parts[1].to_string(), score));
+                    continue;
+                }
+            }
+            // Fault-tolerant: treat any failure as if file didn't exist
+            return;
+        }
+        *scores = new_scores;
+    }
+}
+
+pub fn save_scores(scores: &[(String, u32)]) {
+    let path = get_scores_path();
+    if let Some(parent) = path.parent() {
+        let _ = std::fs::create_dir_all(parent);
+    }
+    let mut content = String::new();
+    for (name, score) in scores {
+        content.push_str(&format!("{} {}\n", score, name));
+    }
+    let _ = std::fs::write(path, content);
 }
 
 #[derive(Resource)]
@@ -214,7 +262,7 @@ pub fn spawn_piece(
     board: Res<Board>,
     mut app_mode: ResMut<AppMode>,
     game_state: Res<GameState>,
-    high_scores: Res<HighScores>,
+    mut high_scores: ResMut<HighScores>,
 ) {
     if *app_mode != AppMode::Playing {
         return;
@@ -245,9 +293,11 @@ pub fn spawn_piece(
                 *app_mode = AppMode::Naming;
             } else {
                 *app_mode = AppMode::HighScore;
+                load_scores(&mut high_scores.0);
             }
             return;
         }
+
         commands.spawn(CurrentPiece {
             piece_type,
             x,
@@ -289,7 +339,6 @@ pub fn handle_actions(
                     *timer = GravityTimer::default();
                     *bag = PieceBag::default();
                     *app_mode = AppMode::Playing;
-                    load_scores(&mut high_scores.0);
                 }
             }
             AppMode::Naming => match action {
@@ -306,6 +355,7 @@ pub fn handle_actions(
                     save_scores(&high_scores.0);
                     current_name.0.clear();
                     *app_mode = AppMode::HighScore;
+                    load_scores(&mut high_scores.0);
                 }
                 _ => {}
             },

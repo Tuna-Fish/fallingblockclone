@@ -26,7 +26,15 @@ fn main() {
         .init_resource::<HighScores>()
         .init_resource::<CurrentName>()
         .init_resource::<MovementTimer>()
-        .add_systems(Startup, (setup_camera, setup_backgrounds, setup_ui))
+        .add_systems(
+            Startup,
+            (
+                setup_camera,
+                setup_backgrounds,
+                setup_ui,
+                initial_load_scores,
+            ),
+        )
         .add_systems(
             Update,
             (
@@ -40,4 +48,8 @@ fn main() {
                 .chain(),
         )
         .run();
+}
+
+fn initial_load_scores(mut high_scores: ResMut<HighScores>) {
+    load_scores(&mut high_scores.0);
 }
