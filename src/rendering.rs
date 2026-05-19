@@ -104,6 +104,13 @@ pub fn render_system(
                     );
                     f.render_widget(Paragraph::new(info_content).block(Block::default().title("Info").borders(Borders::ALL)), chunks[1]);
                 }
+                AppMode::Paused => {
+                    let content = "\n\n   PAUSED\n\nPress any Arrow key to Resume";
+                    f.render_widget(
+                        Paragraph::new(content).block(Block::default().title("Pause").borders(Borders::ALL)),
+                        f.size(),
+                    );
+                }
                 AppMode::HighScore => {
                     let mut content = String::from("--- HIGH SCORES ---\n\n");
                     for (i, (name, score)) in high_scores.0.iter().enumerate() {

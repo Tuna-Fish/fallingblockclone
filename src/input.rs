@@ -38,7 +38,17 @@ pub fn terminal_input(
                     }
                     _ => {}
                 },
+                AppMode::Paused => match key.code {
+                    KeyCode::Up | KeyCode::Down | KeyCode::Left | KeyCode::Right => {
+                        actions.send(GameAction::Resume);
+                    }
+                    _ => {}
+                },
                 AppMode::Playing => {
+                    if key.code == KeyCode::Char('p') {
+                        actions.send(GameAction::Pause);
+                        return;
+                    }
                     let action = match key.code {
                         KeyCode::Left => Some(GameAction::MoveLeft),
                         KeyCode::Right => Some(GameAction::MoveRight),

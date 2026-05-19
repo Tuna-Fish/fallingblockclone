@@ -83,6 +83,7 @@ pub enum AppMode {
     HighScore,
     Playing,
     Naming,
+    Paused,
 }
 
 #[derive(Resource, Default)]
@@ -187,6 +188,8 @@ pub enum GameAction {
     SubmitName,
     KeyPressed(char),
     Backspace,
+    Pause,
+    Resume,
 }
 
 pub fn spawn_piece(
@@ -284,7 +287,16 @@ pub fn handle_actions(
                 }
                 _ => {}
             },
+            AppMode::Paused => {
+                if let GameAction::Resume = action {
+                    *app_mode = AppMode::Playing;
+                }
+            }
             AppMode::Playing => {
+                if let GameAction::Pause = action {
+                    *app_mode = AppMode::Paused;
+                    continue;
+                }
                 let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
                     continue;
                 };
