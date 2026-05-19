@@ -195,14 +195,13 @@ pub fn handle_actions(
                 }
             }
             GameAction::MoveDown => {
-                if !board.is_colliding(piece.piece_type, piece.x, piece.y - 1, piece.rotation) {
+                while !board.is_colliding(piece.piece_type, piece.x, piece.y - 1, piece.rotation) {
                     piece.y -= 1;
-                } else {
-                    board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
-                    commands.entity(entity).despawn();
-                    board.clear_lines();
-                    return;
                 }
+                board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
+                commands.entity(entity).despawn();
+                board.clear_lines();
+                return;
             }
             GameAction::Rotate => {
                 let next_rotation = (piece.rotation + 1) % 4;
