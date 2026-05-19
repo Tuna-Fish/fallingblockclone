@@ -1,5 +1,6 @@
 use crate::logic::{
-    AppMode, Board, CurrentName, CurrentPiece, GameState, HighScores, BOARD_HEIGHT, BOARD_WIDTH,
+    AppMode, Board, CurrentName, CurrentPiece, GameState, HighScores, PieceBag, BOARD_HEIGHT,
+    BOARD_WIDTH,
 };
 use bevy::prelude::*;
 use ratatui::{
@@ -44,6 +45,7 @@ pub fn render_system(
     app_mode: Res<AppMode>,
     high_scores: Res<HighScores>,
     current_name: Res<CurrentName>,
+    bag: Res<PieceBag>,
 ) {
     tui.terminal
         .draw(|f| {
@@ -96,13 +98,43 @@ pub fn render_system(
                         .border_style(Style::default().fg(Color::Yellow));
                     f.render_widget(Paragraph::new(content).block(block), vertical_chunks[0]);
 
+                    let info_chunks = Layout::default()
+                        .direction(Direction::Vertical)
+                        .constraints([Constraint::Length(8), Constraint::Min(0)])
+                        .split(chunks[1]);
+
                     let info_content = format!(
                         "Score: {}\nLines: {}\nSpeed: {:.2}s\n\n[Q]uit\n[Down] Drop\n[Up/Z] Rotate",
                         game_state.score,
                         game_state.lines,
                         timer.0.duration().as_secs_f32()
                     );
-                    f.render_widget(Paragraph::new(info_content).block(Block::default().title("Info").borders(Borders::ALL)), chunks[1]);
+                    f.render_widget(
+                        Paragraph::new(info_content).block(Block::default().title("Info").borders(Borders::ALL)),
+                        info_chunks[1],
+                    );
+
+                    // Next piece preview
+                    if let Some(next_piece) = bag.pieces.last() {
+                        let mut next_display = vec![vec![' '; 4]; 4];
+                        for (dx, dy) in next_piece.coordinates(0) {
+                            if dx >= 0 && dx < 4 && dy >= 0 && dy < 4 {
+                                next_display[dy as usize][dx as usize] = '@';
+                            }
+                        }
+                        let mut next_content = String::new();
+                        for y in (0..4).rev() {
+                            for x in 0..4 {
+                                next_content.push(next_display[y][x]);
+                                next_content.push(' ');
+                            }
+                            next_content.push('\n');
+                        }
+                        f.render_widget(
+                            Paragraph::new(next_content).block(Block::default().title("Next").borders(Borders::ALL)),
+                            info_chunks[0],
+                        );
+                    }
                 }
                 AppMode::Paused => {
                     let content = "\n\n   PAUSED\n\nPress any Arrow key to Resume";

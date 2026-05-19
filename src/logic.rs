@@ -201,15 +201,22 @@ pub fn spawn_piece(
     game_state: Res<GameState>,
     high_scores: Res<HighScores>,
 ) {
-    if *app_mode != AppMode::Playing || !current_piece.is_empty() {
+    if *app_mode != AppMode::Playing {
         return;
     }
 
-    if bag.pieces.is_empty() {
+    // Always ensure we have enough pieces to show "Next"
+    if bag.pieces.len() < 2 {
         let mut new_bag = PieceType::ALL.to_vec();
         let mut rng = rand::thread_rng();
         new_bag.shuffle(&mut rng);
-        bag.pieces = new_bag;
+        for p in new_bag {
+            bag.pieces.insert(0, p);
+        }
+    }
+
+    if !current_piece.is_empty() {
+        return;
     }
 
     if let Some(piece_type) = bag.pieces.pop() {
