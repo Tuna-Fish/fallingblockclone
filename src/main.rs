@@ -9,7 +9,14 @@ use rendering::*;
 
 fn main() {
     App::new()
-        .add_plugins(MinimalPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            primary_window: Some(Window {
+                title: "Bevy Tetris".into(),
+                resolution: (600.0, 800.0).into(),
+                ..default()
+            }),
+            ..default()
+        }))
         .add_event::<GameAction>()
         .init_resource::<Board>()
         .init_resource::<PieceBag>()
@@ -18,16 +25,16 @@ fn main() {
         .init_resource::<AppMode>()
         .init_resource::<HighScores>()
         .init_resource::<CurrentName>()
-        .add_systems(Startup, setup_terminal)
+        .add_systems(Startup, (setup_camera, setup_ui))
         .add_systems(
             Update,
             (
-                terminal_input,
+                gui_input,
                 apply_gravity,
                 handle_actions,
                 spawn_piece,
-                render_system,
-                restore_terminal,
+                render_board,
+                update_ui,
             )
                 .chain(),
         )

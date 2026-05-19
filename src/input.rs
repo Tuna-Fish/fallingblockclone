@@ -1,65 +1,61 @@
 use crate::logic::{AppMode, GameAction};
 use bevy::prelude::*;
-use crossterm::event::{self, Event, KeyCode};
-use std::time::Duration;
 
-pub fn terminal_input(
+pub fn gui_input(
+    keyboard: Res<ButtonInput<KeyCode>>,
+    mut char_evr: EventReader<ReceivedCharacter>,
     mut actions: EventWriter<GameAction>,
     mut exit: EventWriter<bevy::app::AppExit>,
     app_mode: Res<AppMode>,
 ) {
-    if event::poll(Duration::from_millis(0)).unwrap_or(false) {
-        if let Ok(Event::Key(key)) = event::read() {
-            if key.code == KeyCode::Char('q') {
-                exit.send(bevy::app::AppExit::Success);
-                return;
-            }
+    if keyboard.just_pressed(KeyCode::KeyQ) {
+        exit.send(bevy::app::AppExit::Success);
+        return;
+    }
 
-            match *app_mode {
-                AppMode::HighScore => match key.code {
-                    KeyCode::Up
-                    | KeyCode::Down
-                    | KeyCode::Left
-                    | KeyCode::Right
-                    | KeyCode::Enter => {
-                        actions.send(GameAction::StartGame);
-                    }
-                    _ => {}
-                },
-                AppMode::Naming => match key.code {
-                    KeyCode::Enter => {
-                        actions.send(GameAction::SubmitName);
-                    }
-                    KeyCode::Backspace => {
-                        actions.send(GameAction::Backspace);
-                    }
-                    KeyCode::Char(c) => {
-                        actions.send(GameAction::KeyPressed(c));
-                    }
-                    _ => {}
-                },
-                AppMode::Paused => match key.code {
-                    KeyCode::Up | KeyCode::Down | KeyCode::Left | KeyCode::Right => {
-                        actions.send(GameAction::Resume);
-                    }
-                    _ => {}
-                },
-                AppMode::Playing => {
-                    if key.code == KeyCode::Char('p') {
-                        actions.send(GameAction::Pause);
-                        return;
-                    }
-                    let action = match key.code {
-                        KeyCode::Left => Some(GameAction::MoveLeft),
-                        KeyCode::Right => Some(GameAction::MoveRight),
-                        KeyCode::Down => Some(GameAction::MoveDown),
-                        KeyCode::Up | KeyCode::Char('z') => Some(GameAction::Rotate),
-                        _ => None,
-                    };
-                    if let Some(action) = action {
-                        actions.send(action);
+    match *app_mode {
+        AppMode::HighScore => {
+            if keyboard.get_just_pressed().next().is_some() {
+                actions.send(GameAction::StartGame);
+            }
+        }
+        AppMode::Naming => {
+            if keyboard.just_pressed(KeyCode::Enter) {
+                actions.send(GameAction::SubmitName);
+            } else if keyboard.just_pressed(KeyCode::Backspace) {
+                actions.send(GameAction::Backspace);
+            } else {
+                for ev in char_evr.read() {
+                    for c in ev.char.chars() {
+                        if !c.is_control() {
+                            actions.send(GameAction::KeyPressed(c));
+                        }
                     }
                 }
+            }
+        }
+        AppMode::Paused => {
+            if keyboard.just_pressed(KeyCode::ArrowUp)
+                || keyboard.just_pressed(KeyCode::ArrowDown)
+                || keyboard.just_pressed(KeyCode::ArrowLeft)
+                || keyboard.just_pressed(KeyCode::ArrowRight)
+            {
+                actions.send(GameAction::Resume);
+            }
+        }
+        AppMode::Playing => {
+            if keyboard.just_pressed(KeyCode::KeyP) {
+                actions.send(GameAction::Pause);
+            } else if keyboard.just_pressed(KeyCode::ArrowLeft) {
+                actions.send(GameAction::MoveLeft);
+            } else if keyboard.just_pressed(KeyCode::ArrowRight) {
+                actions.send(GameAction::MoveRight);
+            } else if keyboard.just_pressed(KeyCode::ArrowDown) {
+                actions.send(GameAction::MoveDown);
+            } else if keyboard.just_pressed(KeyCode::ArrowUp)
+                || keyboard.just_pressed(KeyCode::KeyZ)
+            {
+                actions.send(GameAction::Rotate);
             }
         }
     }
