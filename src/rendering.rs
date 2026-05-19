@@ -26,8 +26,44 @@ pub struct ScoreText;
 #[derive(Component)]
 pub struct HighScoreText;
 
+#[derive(Component)]
+pub struct GameAreaBackground;
+
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
+}
+
+pub fn setup_backgrounds(mut commands: Commands) {
+    // Board background
+    commands.spawn((
+        SpriteBundle {
+            sprite: Sprite {
+                color: Color::BLACK,
+                custom_size: Some(Vec2::new(
+                    BLOCK_SIZE * BOARD_WIDTH as f32,
+                    BLOCK_SIZE * BOARD_HEIGHT as f32,
+                )),
+                ..default()
+            },
+            transform: Transform::from_xyz(-15.0, -15.0, -1.0),
+            ..default()
+        },
+        GameAreaBackground,
+    ));
+
+    // Next piece background
+    commands.spawn((
+        SpriteBundle {
+            sprite: Sprite {
+                color: Color::BLACK,
+                custom_size: Some(Vec2::new(BLOCK_SIZE * 4.0, BLOCK_SIZE * 4.0)),
+                ..default()
+            },
+            transform: Transform::from_xyz(255.0, 195.0, -1.0),
+            ..default()
+        },
+        GameAreaBackground,
+    ));
 }
 
 pub fn get_color(piece_type: PieceType) -> Color {
@@ -51,6 +87,7 @@ pub fn render_board(
     board_blocks: Query<Entity, With<BoardBlock>>,
     current_blocks: Query<Entity, With<CurrentPieceBlock>>,
     next_blocks: Query<Entity, With<NextPieceBlock>>,
+    mut backgrounds: Query<&mut Visibility, With<GameAreaBackground>>,
 ) {
     // Cleanup previous frame blocks
     for entity in board_blocks.iter() {
@@ -63,7 +100,16 @@ pub fn render_board(
         commands.entity(entity).despawn();
     }
 
-    if *app_mode != AppMode::Playing && *app_mode != AppMode::Paused {
+    let is_visible = *app_mode == AppMode::Playing || *app_mode == AppMode::Paused;
+    for mut visibility in backgrounds.iter_mut() {
+        *visibility = if is_visible {
+            Visibility::Visible
+        } else {
+            Visibility::Hidden
+        };
+    }
+
+    if !is_visible {
         return;
     }
 
@@ -150,7 +196,6 @@ pub fn setup_ui(mut commands: Commands) {
                     position_type: PositionType::Absolute,
                     ..default()
                 },
-                background_color: BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5)),
                 ..default()
             },
             UiRoot,
