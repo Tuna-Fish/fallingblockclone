@@ -148,9 +148,6 @@ pub fn setup_ui(mut commands: Commands) {
                     width: Val::Percent(100.0),
                     height: Val::Percent(100.0),
                     position_type: PositionType::Absolute,
-                    flex_direction: FlexDirection::Column,
-                    align_items: AlignItems::Center,
-                    justify_content: JustifyContent::Center,
                     ..default()
                 },
                 background_color: BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5)),
@@ -163,11 +160,17 @@ pub fn setup_ui(mut commands: Commands) {
                 TextBundle::from_section(
                     "INITIALIZING...",
                     TextStyle {
-                        font_size: 40.0,
+                        font_size: 30.0,
                         color: Color::srgb(1.0, 1.0, 1.0),
                         ..default()
                     },
-                ),
+                )
+                .with_style(Style {
+                    position_type: PositionType::Absolute,
+                    top: Val::Px(20.0),
+                    right: Val::Px(20.0),
+                    ..default()
+                }),
                 ScoreText,
             ));
             parent.spawn((
@@ -178,7 +181,13 @@ pub fn setup_ui(mut commands: Commands) {
                         color: Color::srgb(1.0, 1.0, 0.0),
                         ..default()
                     },
-                ),
+                )
+                .with_style(Style {
+                    position_type: PositionType::Absolute,
+                    top: Val::Percent(30.0),
+                    left: Val::Percent(30.0),
+                    ..default()
+                }),
                 HighScoreText,
             ));
         });
