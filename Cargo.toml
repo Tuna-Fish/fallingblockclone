@@ -12,6 +12,7 @@ bevy = { version = "0.14", default-features = false, features = [
     "bevy_core_pipeline",
     "bevy_text",
     "bevy_asset",
+    "default_font",
     "x11",
 ] }
 rand = "0.8"

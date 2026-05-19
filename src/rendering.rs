@@ -153,6 +153,7 @@ pub fn setup_ui(mut commands: Commands) {
                     justify_content: JustifyContent::Center,
                     ..default()
                 },
+                background_color: BackgroundColor(Color::srgba(0.0, 0.0, 0.0, 0.5)),
                 ..default()
             },
             UiRoot,
