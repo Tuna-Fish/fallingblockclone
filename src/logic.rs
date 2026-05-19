@@ -211,9 +211,12 @@ pub fn handle_actions(
                 let cleared = board.clear_lines();
                 if cleared > 0 {
                     game_state.lines += cleared;
-                    game_state.score += cleared;
-                    if cleared >= 2 {
-                        game_state.score += 1;
+                    game_state.score += cleared * 10;
+                    match cleared {
+                        2 => game_state.score += 2,
+                        3 => game_state.score += 3,
+                        4 => game_state.score += 5,
+                        _ => {}
                     }
                 }
                 return;
@@ -227,9 +230,12 @@ pub fn handle_actions(
                     let cleared = board.clear_lines();
                     if cleared > 0 {
                         game_state.lines += cleared;
-                        game_state.score += cleared;
-                        if cleared >= 2 {
-                            game_state.score += 1;
+                        game_state.score += cleared * 10;
+                        match cleared {
+                            2 => game_state.score += 2,
+                            3 => game_state.score += 3,
+                            4 => game_state.score += 5,
+                            _ => {}
                         }
                     }
                     return;
