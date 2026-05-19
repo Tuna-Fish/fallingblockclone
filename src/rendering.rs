@@ -29,6 +29,29 @@ pub struct HighScoreText;
 #[derive(Component)]
 pub struct GameAreaBackground;
 
+pub const PASTEL_COLORS: [Color; 20] = [
+    Color::srgb(0.9, 0.7, 0.7),
+    Color::srgb(0.7, 0.9, 0.7),
+    Color::srgb(0.7, 0.7, 0.9),
+    Color::srgb(0.9, 0.9, 0.7),
+    Color::srgb(0.8, 0.7, 0.9),
+    Color::srgb(0.7, 0.9, 0.9),
+    Color::srgb(0.9, 0.8, 0.7),
+    Color::srgb(0.7, 0.8, 0.8),
+    Color::srgb(0.8, 0.8, 0.9),
+    Color::srgb(0.8, 0.9, 0.8),
+    Color::srgb(1.0, 0.8, 0.8),
+    Color::srgb(1.0, 0.7, 0.8),
+    Color::srgb(0.8, 0.8, 1.0),
+    Color::srgb(1.0, 1.0, 0.8),
+    Color::srgb(0.8, 1.0, 1.0),
+    Color::srgb(1.0, 0.8, 0.7),
+    Color::srgb(0.8, 0.8, 0.7),
+    Color::srgb(0.8, 0.9, 1.0),
+    Color::srgb(0.9, 0.8, 1.0),
+    Color::srgb(0.7, 0.7, 0.7),
+];
+
 pub fn setup_camera(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }
@@ -201,23 +224,33 @@ pub fn setup_ui(mut commands: Commands) {
             UiRoot,
         ))
         .with_children(|parent| {
-            parent.spawn((
-                TextBundle::from_section(
-                    "INITIALIZING...",
-                    TextStyle {
-                        font_size: 30.0,
-                        color: Color::srgb(1.0, 1.0, 1.0),
+            // HUD Background
+            parent
+                .spawn(NodeBundle {
+                    style: Style {
+                        position_type: PositionType::Absolute,
+                        top: Val::Px(10.0),
+                        right: Val::Px(10.0),
+                        padding: UiRect::all(Val::Px(10.0)),
                         ..default()
                     },
-                )
-                .with_style(Style {
-                    position_type: PositionType::Absolute,
-                    top: Val::Px(20.0),
-                    right: Val::Px(20.0),
+                    background_color: BackgroundColor(Color::BLACK),
                     ..default()
-                }),
-                ScoreText,
-            ));
+                })
+                .with_children(|hud| {
+                    hud.spawn((
+                        TextBundle::from_section(
+                            "INITIALIZING...",
+                            TextStyle {
+                                font_size: 25.0,
+                                color: Color::srgb(1.0, 1.0, 1.0),
+                                ..default()
+                            },
+                        ),
+                        ScoreText,
+                    ));
+                });
+
             parent.spawn((
                 TextBundle::from_section(
                     "",
@@ -230,7 +263,7 @@ pub fn setup_ui(mut commands: Commands) {
                 .with_style(Style {
                     position_type: PositionType::Absolute,
                     top: Val::Percent(30.0),
-                    left: Val::Percent(30.0),
+                    left: Val::Percent(20.0),
                     ..default()
                 }),
                 HighScoreText,
@@ -245,14 +278,20 @@ pub fn update_ui(
     app_mode: Res<AppMode>,
     high_scores: Res<HighScores>,
     current_name: Res<CurrentName>,
+    timer: Res<crate::logic::GravityTimer>,
+    mut clear_color: ResMut<ClearColor>,
 ) {
+    // Update clear color based on speed scaling
+    clear_color.0 = PASTEL_COLORS[game_state.color_index];
+
     if let Ok(mut text) = score_text.get_single_mut() {
         match *app_mode {
             AppMode::Playing | AppMode::Paused => {
                 text.sections[0].value = format!(
-                    "Score: {}\nLines: {}\n{}",
+                    "Score: {}\nLines: {}\nDelay: {:.2}s\n{}",
                     game_state.score,
                     game_state.lines,
+                    timer.0.duration().as_secs_f32(),
                     if *app_mode == AppMode::Paused {
                         "PAUSED"
                     } else {

@@ -75,6 +75,7 @@ pub struct CurrentPiece {
 pub struct GameState {
     pub lines: u32,
     pub score: u32,
+    pub color_index: usize,
 }
 
 #[derive(Resource, Default, PartialEq)]
@@ -416,6 +417,7 @@ pub fn handle_actions(
                                 if game_state.lines / 10 > old_lines / 10 {
                                     let new_duration = timer.0.duration().mul_f32(0.9);
                                     timer.0.set_duration(new_duration);
+                                    game_state.color_index = (game_state.color_index + 1) % 20;
                                 }
                             }
                         } else {
@@ -455,6 +457,7 @@ pub fn handle_actions(
                                 if game_state.lines / 10 > old_lines / 10 {
                                     let new_duration = timer.0.duration().mul_f32(0.9);
                                     timer.0.set_duration(new_duration);
+                                    game_state.color_index = (game_state.color_index + 1) % 20;
                                 }
                             }
                         }
