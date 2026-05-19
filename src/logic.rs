@@ -126,11 +126,68 @@ impl Board {
     }
 }
 
+#[derive(Resource)]
+pub struct GravityTimer(pub Timer);
+
+impl Default for GravityTimer {
+    fn default() -> Self {
+        Self(Timer::from_seconds(0.5, TimerMode::Repeating))
+    }
+}
+
+impl Board {
+    pub fn clear_lines(&mut self) -> u32 {
+        let mut lines_cleared = 0;
+        let mut y = 0;
+        while y < BOARD_HEIGHT {
+            let mut full = true;
+            for x in 0..BOARD_WIDTH {
+                if self.grid[y][x].is_none() {
+                    full = false;
+                    break;
+                }
+            }
+
+            if full {
+                lines_cleared += 1;
+                for move_y in y..(BOARD_HEIGHT - 1) {
+                    self.grid[move_y] = self.grid[move_y + 1];
+                }
+                self.grid[BOARD_HEIGHT - 1] = [None; BOARD_WIDTH];
+            } else {
+                y += 1;
+            }
+        }
+        lines_cleared
+    }
+
+    pub fn is_game_over(&self) -> bool {
+        // Simple check: if top row has anything
+        for x in 0..BOARD_WIDTH {
+            if self.grid[BOARD_HEIGHT - 1][x].is_some() {
+                return true;
+            }
+        }
+        false
+    }
+}
+
+pub fn apply_gravity(
+    time: Res<Time>,
+    mut timer: ResMut<GravityTimer>,
+    mut actions: EventWriter<GameAction>,
+) {
+    if timer.0.tick(time.delta()).just_finished() {
+        actions.send(GameAction::MoveDown);
+    }
+}
+
 pub fn handle_actions(
     mut actions: EventReader<GameAction>,
     mut board: ResMut<Board>,
     mut piece_query: Query<(Entity, &mut CurrentPiece)>,
     mut commands: Commands,
+    mut exit: EventWriter<bevy::app::AppExit>,
 ) {
     let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
         return;
@@ -154,7 +211,11 @@ pub fn handle_actions(
                 } else {
                     board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
                     commands.entity(entity).despawn();
-                    return; // Stop processing actions if piece is locked
+                    board.clear_lines();
+                    if board.is_game_over() {
+                        exit.send(bevy::app::AppExit::Success);
+                    }
+                    return;
                 }
             }
             GameAction::Rotate => {
