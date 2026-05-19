@@ -94,6 +94,7 @@ pub enum GameAction {
     MoveRight,
     MoveDown,
     Rotate,
+    GravityStep,
 }
 
 impl Board {
@@ -168,7 +169,7 @@ pub fn apply_gravity(
     mut actions: EventWriter<GameAction>,
 ) {
     if timer.0.tick(time.delta()).just_finished() {
-        actions.send(GameAction::MoveDown);
+        actions.send(GameAction::GravityStep);
     }
 }
 
@@ -202,6 +203,16 @@ pub fn handle_actions(
                 commands.entity(entity).despawn();
                 board.clear_lines();
                 return;
+            }
+            GameAction::GravityStep => {
+                if !board.is_colliding(piece.piece_type, piece.x, piece.y - 1, piece.rotation) {
+                    piece.y -= 1;
+                } else {
+                    board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
+                    commands.entity(entity).despawn();
+                    board.clear_lines();
+                    return;
+                }
             }
             GameAction::Rotate => {
                 let next_rotation = (piece.rotation + 1) % 4;
