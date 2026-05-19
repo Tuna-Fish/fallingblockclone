@@ -88,6 +88,85 @@ impl Default for PieceBag {
     }
 }
 
+#[derive(Event)]
+pub enum GameAction {
+    MoveLeft,
+    MoveRight,
+    MoveDown,
+    Rotate,
+}
+
+impl Board {
+    pub fn is_colliding(&self, piece_type: PieceType, x: i32, y: i32, rotation: u8) -> bool {
+        for (dx, dy) in piece_type.coordinates(rotation) {
+            let nx = x + dx;
+            let ny = y + dy;
+
+            if nx < 0 || nx >= BOARD_WIDTH as i32 || ny < 0 {
+                return true;
+            }
+
+            if ny < BOARD_HEIGHT as i32 {
+                if self.grid[ny as usize][nx as usize].is_some() {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    pub fn lock_piece(&mut self, piece_type: PieceType, x: i32, y: i32, rotation: u8) {
+        for (dx, dy) in piece_type.coordinates(rotation) {
+            let nx = x + dx;
+            let ny = y + dy;
+            if nx >= 0 && nx < BOARD_WIDTH as i32 && ny >= 0 && ny < BOARD_HEIGHT as i32 {
+                self.grid[ny as usize][nx as usize] = Some(piece_type);
+            }
+        }
+    }
+}
+
+pub fn handle_actions(
+    mut actions: EventReader<GameAction>,
+    mut board: ResMut<Board>,
+    mut piece_query: Query<(Entity, &mut CurrentPiece)>,
+    mut commands: Commands,
+) {
+    let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
+        return;
+    };
+
+    for action in actions.read() {
+        match action {
+            GameAction::MoveLeft => {
+                if !board.is_colliding(piece.piece_type, piece.x - 1, piece.y, piece.rotation) {
+                    piece.x -= 1;
+                }
+            }
+            GameAction::MoveRight => {
+                if !board.is_colliding(piece.piece_type, piece.x + 1, piece.y, piece.rotation) {
+                    piece.x += 1;
+                }
+            }
+            GameAction::MoveDown => {
+                if !board.is_colliding(piece.piece_type, piece.x, piece.y - 1, piece.rotation) {
+                    piece.y -= 1;
+                } else {
+                    board.lock_piece(piece.piece_type, piece.x, piece.y, piece.rotation);
+                    commands.entity(entity).despawn();
+                    return; // Stop processing actions if piece is locked
+                }
+            }
+            GameAction::Rotate => {
+                let next_rotation = (piece.rotation + 1) % 4;
+                if !board.is_colliding(piece.piece_type, piece.x, piece.y, next_rotation) {
+                    piece.rotation = next_rotation;
+                }
+            }
+        }
+    }
+}
+
 pub fn spawn_piece(
     mut commands: Commands,
     mut bag: ResMut<PieceBag>,
