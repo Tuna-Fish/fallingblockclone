@@ -1,9 +1,10 @@
 use crate::logic::{AppMode, GameAction, MovementTimer};
+use bevy::input::keyboard::{Key, KeyboardInput};
 use bevy::prelude::*;
 
 pub fn gui_input(
     keyboard: Res<ButtonInput<KeyCode>>,
-    mut char_evr: EventReader<ReceivedCharacter>,
+    mut kbd_evr: EventReader<KeyboardInput>,
     mut actions: EventWriter<GameAction>,
     mut exit: EventWriter<bevy::app::AppExit>,
     app_mode: Res<AppMode>,
@@ -27,10 +28,14 @@ pub fn gui_input(
             } else if keyboard.just_pressed(KeyCode::Backspace) {
                 actions.send(GameAction::Backspace);
             } else {
-                for ev in char_evr.read() {
-                    for c in ev.char.chars() {
-                        if !c.is_control() {
-                            actions.send(GameAction::KeyPressed(c));
+                for ev in kbd_evr.read() {
+                    if ev.state.is_pressed() {
+                        if let Key::Character(c) = &ev.logical_key {
+                            for ch in c.chars() {
+                                if !ch.is_control() {
+                                    actions.send(GameAction::KeyPressed(ch));
+                                }
+                            }
                         }
                     }
                 }
