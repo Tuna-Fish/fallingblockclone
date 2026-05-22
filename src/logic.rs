@@ -466,6 +466,22 @@ pub fn handle_actions(
                         let next_rotation = (piece.rotation + 1) % 4;
                         if !board.is_colliding(piece.piece_type, piece.x, piece.y, next_rotation) {
                             piece.rotation = next_rotation;
+                        } else if !board.is_colliding(
+                            piece.piece_type,
+                            piece.x - 1,
+                            piece.y,
+                            next_rotation,
+                        ) {
+                            piece.x -= 1;
+                            piece.rotation = next_rotation;
+                        } else if !board.is_colliding(
+                            piece.piece_type,
+                            piece.x + 1,
+                            piece.y,
+                            next_rotation,
+                        ) {
+                            piece.x += 1;
+                            piece.rotation = next_rotation;
                         }
                     }
                     _ => {}
