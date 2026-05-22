@@ -29,6 +29,9 @@ pub struct HighScoreText;
 #[derive(Component)]
 pub struct GameAreaBackground;
 
+#[derive(Component)]
+pub struct HudContainer;
+
 pub const PASTEL_COLORS: [Color; 20] = [
     Color::srgb(0.7, 0.9, 0.7),
     Color::srgb(0.7, 0.7, 0.9),
@@ -226,17 +229,20 @@ pub fn setup_ui(mut commands: Commands) {
         .with_children(|parent| {
             // HUD Background
             parent
-                .spawn(NodeBundle {
-                    style: Style {
-                        position_type: PositionType::Absolute,
-                        top: Val::Px(10.0),
-                        right: Val::Px(10.0),
-                        padding: UiRect::all(Val::Px(10.0)),
+                .spawn((
+                    NodeBundle {
+                        style: Style {
+                            position_type: PositionType::Absolute,
+                            top: Val::Px(10.0),
+                            right: Val::Px(10.0),
+                            padding: UiRect::all(Val::Px(10.0)),
+                            ..default()
+                        },
+                        background_color: BackgroundColor(Color::BLACK),
                         ..default()
                     },
-                    background_color: BackgroundColor(Color::BLACK),
-                    ..default()
-                })
+                    HudContainer,
+                ))
                 .with_children(|hud| {
                     hud.spawn((
                         TextBundle::from_section(
@@ -274,6 +280,7 @@ pub fn setup_ui(mut commands: Commands) {
 pub fn update_ui(
     mut score_text: Query<&mut Text, (With<ScoreText>, Without<HighScoreText>)>,
     mut high_score_text: Query<&mut Text, With<HighScoreText>>,
+    mut hud_container: Query<&mut Style, With<HudContainer>>,
     game_state: Res<GameState>,
     app_mode: Res<AppMode>,
     high_scores: Res<HighScores>,
@@ -283,6 +290,18 @@ pub fn update_ui(
 ) {
     // Update clear color based on speed scaling
     clear_color.0 = PASTEL_COLORS[game_state.color_index];
+
+    if let Ok(mut style) = hud_container.get_single_mut() {
+        if *app_mode == AppMode::Naming {
+            style.right = Val::Auto;
+            style.left = Val::Percent(35.0);
+            style.top = Val::Percent(40.0);
+        } else {
+            style.right = Val::Px(10.0);
+            style.left = Val::Auto;
+            style.top = Val::Px(10.0);
+        }
+    }
 
     if let Ok(mut text) = score_text.get_single_mut() {
         match *app_mode {
