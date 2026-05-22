@@ -30,7 +30,6 @@ pub struct HighScoreText;
 pub struct GameAreaBackground;
 
 pub const PASTEL_COLORS: [Color; 20] = [
-    Color::srgb(0.9, 0.7, 0.7),
     Color::srgb(0.7, 0.9, 0.7),
     Color::srgb(0.7, 0.7, 0.9),
     Color::srgb(0.9, 0.9, 0.7),
@@ -50,6 +49,7 @@ pub const PASTEL_COLORS: [Color; 20] = [
     Color::srgb(0.8, 0.9, 1.0),
     Color::srgb(0.9, 0.8, 1.0),
     Color::srgb(0.7, 0.7, 0.7),
+    Color::srgb(0.9, 0.7, 0.7),
 ];
 
 pub fn setup_camera(mut commands: Commands) {
@@ -315,7 +315,7 @@ pub fn update_ui(
         if *app_mode == AppMode::HighScore {
             let mut content = String::from("--- HIGH SCORES ---\n");
             for (i, (name, score)) in high_scores.0.iter().enumerate() {
-                content.push_str(&format!("{}. {:<10} {}\n", i + 1, name, score));
+                content.push_str(&format!("{:2}. {:<10} {}\n", i + 1, name, score));
             }
             content.push_str("\nPress any key to Start");
             text.sections[0].value = content;
