@@ -27,7 +27,9 @@ pub fn gui_input(
 
             match *app_mode {
                 AppMode::HighScore => {
-                    actions.send(GameAction::StartGame);
+                    if is_arrow(ev.key_code) || ev.key_code == KeyCode::Enter {
+                        actions.send(GameAction::StartGame);
+                    }
                 }
                 AppMode::Naming => {
                     if ev.key_code == KeyCode::Enter {
