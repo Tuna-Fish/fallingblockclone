@@ -13,8 +13,10 @@ pub fn gui_input(
 ) {
     for ev in kbd_evr.read() {
         if ev.state.is_pressed() {
-            // Ignore OS auto-repeat to let our own DAS handle it
-            if keyboard.pressed(ev.key_code) {
+            // In Bevy 0.14, KeyboardInput doesn't have a 'repeat' field.
+            // We can detect OS repeats by checking if the key was already pressed
+            // in the previous frame (pressed && !just_pressed).
+            if keyboard.pressed(ev.key_code) && !keyboard.just_pressed(ev.key_code) {
                 continue;
             }
 
