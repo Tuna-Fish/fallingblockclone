@@ -38,6 +38,7 @@ fn main() {
                 setup_backgrounds,
                 setup_ui,
                 initial_load_scores,
+                set_window_icon,
             ),
         )
         .add_systems(

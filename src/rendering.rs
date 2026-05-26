@@ -92,6 +92,24 @@ pub fn setup_backgrounds(mut commands: Commands) {
     ));
 }
 
+pub fn set_window_icon(
+    // we have to use `NonSend` here
+    windows: NonSend<bevy::winit::WinitWindows>,
+) {
+    for window in windows.windows.values() {
+        let (icon_rgba, icon_width, icon_height) = {
+            let image = image::load_from_memory(include_bytes!("../assets/icon.png"))
+                .unwrap()
+                .into_rgba8();
+            let (width, height) = image.dimensions();
+            let rgba = image.into_raw();
+            (rgba, width, height)
+        };
+        let icon = winit::window::Icon::from_rgba(icon_rgba, icon_width, icon_height).unwrap();
+        window.set_window_icon(Some(icon));
+    }
+}
+
 pub fn get_color(piece_type: PieceType) -> Color {
     match piece_type {
         PieceType::I => Color::srgb(0.0, 1.0, 1.0),
