@@ -21,7 +21,11 @@ pub fn gui_input(
             }
 
             if ev.key_code == KeyCode::KeyQ {
-                exit.send(bevy::app::AppExit::Success);
+                if *app_mode == AppMode::HighScore {
+                    exit.send(bevy::app::AppExit::Success);
+                } else {
+                    actions.send(GameAction::ReturnToMenu);
+                }
                 return;
             }
 

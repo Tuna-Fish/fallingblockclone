@@ -254,6 +254,7 @@ pub enum GameAction {
     Backspace,
     Pause,
     Resume,
+    ReturnToMenu,
 }
 
 pub fn spawn_piece(
@@ -332,6 +333,11 @@ pub fn handle_actions(
     mut bag: ResMut<PieceBag>,
 ) {
     for action in actions.read() {
+        if let GameAction::ReturnToMenu = action {
+            *app_mode = AppMode::HighScore;
+            load_scores(&mut high_scores.0);
+            continue;
+        }
         match app_mode.as_ref() {
             AppMode::HighScore => {
                 if let GameAction::StartGame = action {
