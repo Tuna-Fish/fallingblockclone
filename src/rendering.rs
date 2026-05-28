@@ -4,10 +4,6 @@ use crate::logic::{
 };
 use bevy::prelude::*;
 
-pub const BLOCK_SIZE: f32 = 30.0;
-pub const BOARD_OFFSET_X: f32 = -150.0;
-pub const BOARD_OFFSET_Y: f32 = -300.0;
-
 #[derive(Component)]
 pub struct BoardBlock;
 
@@ -31,6 +27,12 @@ pub struct GameAreaBackground;
 
 #[derive(Component)]
 pub struct HudContainer;
+
+#[derive(Component)]
+pub struct BoardBackground;
+
+#[derive(Component)]
+pub struct NextBackground;
 
 pub const PASTEL_COLORS: [Color; 20] = [
     Color::srgb(0.7, 0.9, 0.7),
@@ -65,16 +67,13 @@ pub fn setup_backgrounds(mut commands: Commands) {
         SpriteBundle {
             sprite: Sprite {
                 color: Color::BLACK,
-                custom_size: Some(Vec2::new(
-                    BLOCK_SIZE * BOARD_WIDTH as f32,
-                    BLOCK_SIZE * BOARD_HEIGHT as f32,
-                )),
                 ..default()
             },
-            transform: Transform::from_xyz(-15.0, -15.0, -1.0),
+            transform: Transform::from_xyz(0.0, 0.0, -1.0),
             ..default()
         },
         GameAreaBackground,
+        BoardBackground,
     ));
 
     // Next piece background
@@ -82,13 +81,13 @@ pub fn setup_backgrounds(mut commands: Commands) {
         SpriteBundle {
             sprite: Sprite {
                 color: Color::BLACK,
-                custom_size: Some(Vec2::new(BLOCK_SIZE * 4.0, BLOCK_SIZE * 4.0)),
                 ..default()
             },
-            transform: Transform::from_xyz(255.0, 195.0, -1.0),
+            transform: Transform::from_xyz(0.0, 0.0, -1.0),
             ..default()
         },
         GameAreaBackground,
+        NextBackground,
     ));
 }
 
@@ -131,7 +130,15 @@ pub fn render_board(
     board_blocks: Query<Entity, With<BoardBlock>>,
     current_blocks: Query<Entity, With<CurrentPieceBlock>>,
     next_blocks: Query<Entity, With<NextPieceBlock>>,
-    mut backgrounds: Query<&mut Visibility, With<GameAreaBackground>>,
+    mut board_bg: Query<
+        (&mut Visibility, &mut Sprite, &mut Transform),
+        (With<BoardBackground>, Without<NextBackground>),
+    >,
+    mut next_bg: Query<
+        (&mut Visibility, &mut Sprite, &mut Transform),
+        (With<NextBackground>, Without<BoardBackground>),
+    >,
+    windows: Query<&Window, With<bevy::window::PrimaryWindow>>,
 ) {
     // Cleanup previous frame blocks
     for entity in board_blocks.iter() {
@@ -144,20 +151,59 @@ pub fn render_board(
         commands.entity(entity).despawn();
     }
 
+    let window = windows.single();
+    let win_w = window.width();
+    let win_h = window.height();
+
+    // Fixed margins/HUD area
+    let hud_width = 200.0;
+    let padding = 40.0;
+
+    let available_w = win_w - hud_width - 2.0 * padding;
+    let available_h = win_h - 2.0 * padding;
+
+    // Calculate dynamic block size based on 10x20 aspect ratio
+    let block_size = (available_w / 10.0).min(available_h / 20.0).max(10.0);
+
+    // Board offsets (relative to center of window)
+    let board_center_x = -win_w / 2.0 + padding + (available_w / 2.0);
+    let board_center_y = 0.0;
+
+    let board_bottom_left_x = board_center_x - (5.0 * block_size);
+    let board_bottom_left_y = board_center_y - (10.0 * block_size);
+
     let is_visible = *app_mode == AppMode::Playing || *app_mode == AppMode::Paused;
-    for mut visibility in backgrounds.iter_mut() {
-        *visibility = if is_visible {
+
+    // Update board background
+    if let Ok((mut vis, mut sprite, mut trans)) = board_bg.get_single_mut() {
+        *vis = if is_visible {
             Visibility::Visible
         } else {
             Visibility::Hidden
         };
+        sprite.custom_size = Some(Vec2::new(block_size * 10.0, block_size * 20.0));
+        trans.translation = Vec3::new(board_center_x, board_center_y, -1.0);
+    }
+
+    // Update next piece background
+    let next_bg_center_x = win_w / 2.0 - (hud_width / 2.0) - padding;
+    let next_bg_center_y = win_h / 2.0 - padding - (2.0 * block_size);
+
+    if let Ok((mut vis, mut sprite, mut trans)) = next_bg.get_single_mut() {
+        *vis = if is_visible {
+            Visibility::Visible
+        } else {
+            Visibility::Hidden
+        };
+        sprite.custom_size = Some(Vec2::new(block_size * 4.0, block_size * 4.0));
+        trans.translation = Vec3::new(next_bg_center_x, next_bg_center_y, -1.0);
     }
 
     if !is_visible {
         return;
     }
 
-    // Draw board
+    // Draw board blocks
     for y in 0..BOARD_HEIGHT {
         for x in 0..BOARD_WIDTH {
             if let Some(piece_type) = board.grid[y][x] {
@@ -165,12 +211,12 @@ pub fn render_board(
                     SpriteBundle {
                         sprite: Sprite {
                             color: get_color(piece_type),
-                            custom_size: Some(Vec2::new(BLOCK_SIZE - 2.0, BLOCK_SIZE - 2.0)),
+                            custom_size: Some(Vec2::new(block_size - 2.0, block_size - 2.0)),
                             ..default()
                         },
                         transform: Transform::from_xyz(
-                            BOARD_OFFSET_X + x as f32 * BLOCK_SIZE,
-                            BOARD_OFFSET_Y + y as f32 * BLOCK_SIZE,
+                            board_bottom_left_x + (x as f32 + 0.5) * block_size,
+                            board_bottom_left_y + (y as f32 + 0.5) * block_size,
                             0.0,
                         ),
                         ..default()
@@ -191,12 +237,12 @@ pub fn render_board(
                     SpriteBundle {
                         sprite: Sprite {
                             color: get_color(piece.piece_type),
-                            custom_size: Some(Vec2::new(BLOCK_SIZE - 2.0, BLOCK_SIZE - 2.0)),
+                            custom_size: Some(Vec2::new(block_size - 2.0, block_size - 2.0)),
                             ..default()
                         },
                         transform: Transform::from_xyz(
-                            BOARD_OFFSET_X + nx as f32 * BLOCK_SIZE,
-                            BOARD_OFFSET_Y + ny as f32 * BLOCK_SIZE,
+                            board_bottom_left_x + (nx as f32 + 0.5) * block_size,
+                            board_bottom_left_y + (ny as f32 + 0.5) * block_size,
                             1.0,
                         ),
                         ..default()
@@ -209,17 +255,20 @@ pub fn render_board(
 
     // Draw next piece
     if let Some(next_piece) = bag.pieces.last() {
+        let next_start_x = next_bg_center_x - (2.0 * block_size);
+        let next_start_y = next_bg_center_y - (2.0 * block_size);
+
         for (dx, dy) in next_piece.coordinates(0) {
             commands.spawn((
                 SpriteBundle {
                     sprite: Sprite {
                         color: get_color(*next_piece),
-                        custom_size: Some(Vec2::new(BLOCK_SIZE - 2.0, BLOCK_SIZE - 2.0)),
+                        custom_size: Some(Vec2::new(block_size - 2.0, block_size - 2.0)),
                         ..default()
                     },
                     transform: Transform::from_xyz(
-                        BOARD_OFFSET_X + (BOARD_WIDTH as f32 + 2.0 + dx as f32) * BLOCK_SIZE,
-                        BOARD_OFFSET_Y + (BOARD_HEIGHT as f32 - 5.0 + dy as f32) * BLOCK_SIZE,
+                        next_start_x + (dx as f32 + 0.5) * block_size,
+                        next_start_y + (dy as f32 + 0.5) * block_size,
                         0.0,
                     ),
                     ..default()
