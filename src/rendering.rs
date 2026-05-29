@@ -4,6 +4,9 @@ use crate::logic::{
 };
 use bevy::prelude::*;
 
+pub const HUD_WIDTH: f32 = 200.0;
+pub const HUD_PADDING: f32 = 40.0;
+
 #[derive(Component)]
 pub struct BoardBlock;
 
@@ -155,18 +158,14 @@ pub fn render_board(
     let win_w = window.width();
     let win_h = window.height();
 
-    // Fixed margins/HUD area
-    let hud_width = 200.0;
-    let padding = 40.0;
-
-    let available_w = win_w - hud_width - 2.0 * padding;
-    let available_h = win_h - 2.0 * padding;
+    let available_w = win_w - HUD_WIDTH - 2.0 * HUD_PADDING;
+    let available_h = win_h - 2.0 * HUD_PADDING;
 
     // Calculate dynamic block size based on 10x20 aspect ratio
     let block_size = (available_w / 10.0).min(available_h / 20.0).max(10.0);
 
     // Board offsets (relative to center of window)
-    let board_center_x = -win_w / 2.0 + padding + (available_w / 2.0);
+    let board_center_x = -win_w / 2.0 + HUD_PADDING + (available_w / 2.0);
     let board_center_y = 0.0;
 
     let board_bottom_left_x = board_center_x - (5.0 * block_size);
@@ -186,8 +185,8 @@ pub fn render_board(
     }
 
     // Update next piece background
-    let next_bg_center_x = win_w / 2.0 - (hud_width / 2.0) - padding;
-    let next_bg_center_y = win_h / 2.0 - padding - (2.0 * block_size);
+    let next_bg_center_x = win_w / 2.0 - (HUD_WIDTH / 2.0) - HUD_PADDING;
+    let next_bg_center_y = win_h / 2.0 - HUD_PADDING - (2.0 * block_size);
 
     if let Ok((mut vis, mut sprite, mut trans)) = next_bg.get_single_mut() {
         *vis = if is_visible {
@@ -354,9 +353,17 @@ pub fn update_ui(
     current_name: Res<CurrentName>,
     timer: Res<crate::logic::GravityTimer>,
     mut clear_color: ResMut<ClearColor>,
+    windows: Query<&Window, With<bevy::window::PrimaryWindow>>,
 ) {
     // Update clear color based on speed scaling
     clear_color.0 = PASTEL_COLORS[game_state.color_index];
+
+    let window = windows.single();
+    let win_w = window.width();
+    let win_h = window.height();
+    let available_w = win_w - HUD_WIDTH - 2.0 * HUD_PADDING;
+    let available_h = win_h - 2.0 * HUD_PADDING;
+    let block_size = (available_w / 10.0).min(available_h / 20.0).max(10.0);
 
     if let Ok(mut style) = hud_container.get_single_mut() {
         if *app_mode == AppMode::Naming {
@@ -364,9 +371,9 @@ pub fn update_ui(
             style.left = Val::Percent(35.0);
             style.top = Val::Percent(40.0);
         } else {
-            style.right = Val::Px(10.0);
+            style.right = Val::Px(HUD_PADDING);
             style.left = Val::Auto;
-            style.top = Val::Px(10.0);
+            style.top = Val::Px(HUD_PADDING + 4.0 * block_size + 20.0);
         }
     }
 
