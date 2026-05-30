@@ -414,15 +414,18 @@ pub fn handle_actions(
                             commands.entity(entity).despawn();
                             let cleared = board.clear_lines();
                             if cleared > 0 {
-                                let old_lines = game_state.lines;
-                                game_state.lines += cleared;
-                                game_state.score += cleared * 10;
+                                let level = 1 + (game_state.lines / 10);
+                                let mut points = cleared * 10;
                                 match cleared {
-                                    2 => game_state.score += 2,
-                                    3 => game_state.score += 3,
-                                    4 => game_state.score += 5,
+                                    2 => points += 2,
+                                    3 => points += 3,
+                                    4 => points += 5,
                                     _ => {}
                                 }
+                                game_state.score += points * level;
+
+                                let old_lines = game_state.lines;
+                                game_state.lines += cleared;
                                 if game_state.lines / 10 > old_lines / 10 {
                                     let new_duration = timer.0.duration().mul_f32(0.9);
                                     timer.0.set_duration(new_duration);
@@ -454,15 +457,18 @@ pub fn handle_actions(
                             commands.entity(entity).despawn();
                             let cleared = board.clear_lines();
                             if cleared > 0 {
-                                let old_lines = game_state.lines;
-                                game_state.lines += cleared;
-                                game_state.score += cleared * 10;
+                                let level = 1 + (game_state.lines / 10);
+                                let mut points = cleared * 10;
                                 match cleared {
-                                    2 => game_state.score += 2,
-                                    3 => game_state.score += 3,
-                                    4 => game_state.score += 5,
+                                    2 => points += 2,
+                                    3 => points += 3,
+                                    4 => points += 5,
                                     _ => {}
                                 }
+                                game_state.score += points * level;
+
+                                let old_lines = game_state.lines;
+                                game_state.lines += cleared;
                                 if game_state.lines / 10 > old_lines / 10 {
                                     let new_duration = timer.0.duration().mul_f32(0.9);
                                     timer.0.set_duration(new_duration);
