@@ -408,7 +408,7 @@ pub fn update_ui(
         if *app_mode == AppMode::HighScore {
             let mut content = String::from("--- HIGH SCORES ---\n");
             for (i, (name, score)) in high_scores.0.iter().enumerate() {
-                content.push_str(&format!("{:2}. {:<10} {:4}\n", i + 1, name, score));
+                content.push_str(&format!("{:2}. {:<10} {:5}\n", i + 1, name, score));
             }
             content.push_str("\nPress any key to Start");
             text.sections[0].value = content;
