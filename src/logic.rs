@@ -336,6 +336,9 @@ pub fn handle_actions(
         if let GameAction::ReturnToMenu = action {
             *app_mode = AppMode::HighScore;
             load_scores(&mut high_scores.0);
+            for (entity, _) in piece_query.iter() {
+                commands.entity(entity).despawn();
+            }
             continue;
         }
         match app_mode.as_ref() {
