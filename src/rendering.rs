@@ -185,7 +185,7 @@ pub fn render_board(
     }
 
     // Update next piece background
-    let next_bg_center_x = win_w / 2.0 - (HUD_WIDTH / 2.0) - HUD_PADDING;
+    let next_bg_center_x = board_center_x + (5.0 * block_size) + HUD_PADDING + (HUD_WIDTH / 2.0);
     let next_bg_center_y = win_h / 2.0 - HUD_PADDING - (2.0 * block_size);
 
     if let Ok((mut vis, mut sprite, mut trans)) = next_bg.get_single_mut() {
@@ -374,8 +374,8 @@ pub fn update_ui(
             style.left = Val::Percent(35.0);
             style.top = Val::Percent(40.0);
         } else {
-            style.right = Val::Px(HUD_PADDING);
-            style.left = Val::Auto;
+            style.right = Val::Auto;
+            style.left = Val::Px(HUD_PADDING * 2.0 + (available_w / 2.0) + 5.0 * block_size);
             style.top = Val::Px(HUD_PADDING + 4.0 * block_size + 20.0);
         }
     }
