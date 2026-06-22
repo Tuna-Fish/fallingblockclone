@@ -324,23 +324,26 @@ pub fn setup_ui(mut commands: Commands) {
                 });
 
             parent.spawn((
-                TextBundle::from_section(
-                    "",
-                    TextStyle {
-                        font_size: 30.0,
-                        color: Color::srgb(1.0, 1.0, 1.0),
+                TextBundle {
+                    text: Text::from_section(
+                        "",
+                        TextStyle {
+                            font_size: 30.0,
+                            color: Color::srgb(1.0, 1.0, 1.0),
+                            ..default()
+                        },
+                    ),
+                    style: Style {
+                        position_type: PositionType::Absolute,
+                        top: Val::Percent(30.0),
+                        left: Val::Percent(20.0),
+                        padding: UiRect::all(Val::Px(10.0)),
                         ..default()
                     },
-                )
-                .with_style(Style {
-                    position_type: PositionType::Absolute,
-                    top: Val::Percent(30.0),
-                    left: Val::Percent(20.0),
-                    padding: UiRect::all(Val::Px(10.0)),
+                    background_color: BackgroundColor(Color::BLACK),
+                    visibility: Visibility::Hidden,
                     ..default()
-                }),
-                BackgroundColor(Color::BLACK),
-                Visibility::Hidden,
+                },
                 HighScoreText,
             ));
         });
