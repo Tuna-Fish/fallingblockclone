@@ -381,7 +381,7 @@ pub fn update_ui(
         match *app_mode {
             AppMode::Playing | AppMode::Paused => {
                 text.sections[0].value = format!(
-                    "Score: {}\nLines: {}\nDelay: {:.2}s\n{}",
+                    "Score: {:>5}\nLines: {}\nDelay: {:.2}s\n{}",
                     game_state.score,
                     game_state.lines,
                     timer.0.duration().as_secs_f32(),
@@ -394,12 +394,12 @@ pub fn update_ui(
             }
             AppMode::Naming => {
                 text.sections[0].value = format!(
-                    "CONGRATULATIONS!\nScore: {}\nEnter Name: {}",
+                    "CONGRATULATIONS!\nScore: {:>5}\nEnter Name: {}",
                     game_state.score, current_name.0
                 );
             }
             AppMode::HighScore => {
-                text.sections[0].value = format!("Last Score: {}", game_state.score);
+                text.sections[0].value = format!("Last Score: {:>5}", game_state.score);
             }
         }
     }
@@ -408,7 +408,7 @@ pub fn update_ui(
         if *app_mode == AppMode::HighScore {
             let mut content = String::from("--- HIGH SCORES ---\n");
             for (i, (name, score)) in high_scores.0.iter().enumerate() {
-                content.push_str(&format!("{:2}. {:<10} {:5}\n", i + 1, name, score));
+                content.push_str(&format!("{:2}. {:<10} {:>5}\n", i + 1, name, score));
             }
             content.push_str("\nPress any key to Start");
             text.sections[0].value = content;
