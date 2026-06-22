@@ -337,7 +337,7 @@ pub fn setup_ui(mut commands: Commands) {
                         position_type: PositionType::Absolute,
                         top: Val::Percent(30.0),
                         left: Val::Percent(20.0),
-                        padding: UiRect::all(Val::Px(10.0)),
+                        padding: UiRect::all(Val::Px(40.0)),
                         ..default()
                     },
                     background_color: BackgroundColor(Color::BLACK),
