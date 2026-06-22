@@ -328,7 +328,7 @@ pub fn setup_ui(mut commands: Commands) {
                     "",
                     TextStyle {
                         font_size: 30.0,
-                        color: Color::srgb(1.0, 1.0, 0.0),
+                        color: Color::srgb(1.0, 1.0, 1.0),
                         ..default()
                     },
                 )
@@ -336,8 +336,11 @@ pub fn setup_ui(mut commands: Commands) {
                     position_type: PositionType::Absolute,
                     top: Val::Percent(30.0),
                     left: Val::Percent(20.0),
+                    padding: UiRect::all(Val::Px(10.0)),
                     ..default()
                 }),
+                BackgroundColor(Color::BLACK),
+                Visibility::Hidden,
                 HighScoreText,
             ));
         });
@@ -345,7 +348,7 @@ pub fn setup_ui(mut commands: Commands) {
 
 pub fn update_ui(
     mut score_text: Query<&mut Text, (With<ScoreText>, Without<HighScoreText>)>,
-    mut high_score_text: Query<&mut Text, With<HighScoreText>>,
+    mut high_score_text: Query<(&mut Text, &mut Visibility), With<HighScoreText>>,
     mut hud_container: Query<&mut Style, With<HudContainer>>,
     game_state: Res<GameState>,
     app_mode: Res<AppMode>,
@@ -404,7 +407,7 @@ pub fn update_ui(
         }
     }
 
-    if let Ok(mut text) = high_score_text.get_single_mut() {
+    if let Ok((mut text, mut visibility)) = high_score_text.get_single_mut() {
         if *app_mode == AppMode::HighScore {
             let mut content = String::from("--- HIGH SCORES ---\n");
             for (i, (name, score)) in high_scores.0.iter().enumerate() {
@@ -412,8 +415,9 @@ pub fn update_ui(
             }
             content.push_str("\nPress any key to Start");
             text.sections[0].value = content;
+            *visibility = Visibility::Visible;
         } else {
-            text.sections[0].value = "".to_string();
+            *visibility = Visibility::Hidden;
         }
     }
 }
