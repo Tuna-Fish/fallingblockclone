@@ -387,7 +387,7 @@ pub fn update_ui(
         match *app_mode {
             AppMode::Playing | AppMode::Paused => {
                 text.sections[0].value = format!(
-                    "Score: {:>5}\nLines: {}\nDelay: {:.2}s\n{}",
+                    "Score: {:>6}\nLines: {:>6}\nDelay: {:>5.2}s\n{}",
                     game_state.score,
                     game_state.lines,
                     timer.0.duration().as_secs_f32(),
