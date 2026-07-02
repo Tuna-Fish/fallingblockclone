@@ -17,12 +17,12 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: "Bevy Tetris".into(),
-                resolution: (600.0, 800.0).into(),
+                resolution: (600_u32, 800_u32).into(),
                 ..default()
             }),
             ..default()
         }))
-        .add_event::<GameAction>()
+        .add_message::<GameAction>()
         .init_resource::<Board>()
         .init_resource::<PieceBag>()
         .init_resource::<GravityTimer>()

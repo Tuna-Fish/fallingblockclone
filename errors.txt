@@ -1,0 +1,369 @@
+   Compiling tetrisclone v0.1.0 (/home/geminiuser/tetrisclone)
+error[E0425]: cannot find type `EventReader` in this scope
+ --> src/input.rs:7:18
+  |
+7 |     mut kbd_evr: EventReader<KeyboardInput>,
+  |                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EventWriter` in this scope
+ --> src/input.rs:8:18
+  |
+8 |     mut actions: EventWriter<GameAction>,
+  |                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EventWriter` in this scope
+ --> src/input.rs:9:15
+  |
+9 |     mut exit: EventWriter<bevy::app::AppExit>,
+  |               ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EventWriter` in this scope
+   --> src/logic.rs:315:18
+    |
+315 |     mut actions: EventWriter<GameAction>,
+    |                  ^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find type `EventReader` in this scope
+   --> src/logic.rs:324:18
+    |
+324 |     mut actions: EventReader<GameAction>,
+    |                  ^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `SpriteBundle` in this scope
+  --> src/rendering.rs:70:9
+   |
+70 |         SpriteBundle {
+   |         ^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `SpriteBundle` in this scope
+  --> src/rendering.rs:84:9
+   |
+84 |         SpriteBundle {
+   |         ^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `SpriteBundle` in this scope
+   --> src/rendering.rs:210:21
+    |
+210 |                     SpriteBundle {
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `SpriteBundle` in this scope
+   --> src/rendering.rs:236:21
+    |
+236 |                     SpriteBundle {
+    |                     ^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `SpriteBundle` in this scope
+   --> src/rendering.rs:262:17
+    |
+262 |                 SpriteBundle {
+    |                 ^^^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `NodeBundle` in this scope
+   --> src/rendering.rs:284:13
+    |
+284 |             NodeBundle {
+    |             ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Style` in this scope
+   --> src/rendering.rs:285:24
+    |
+285 |                 style: Style {
+    |                        ^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `NodeBundle` in this scope
+   --> src/rendering.rs:299:21
+    |
+299 |                     NodeBundle {
+    |                     ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Style` in this scope
+   --> src/rendering.rs:300:32
+    |
+300 |                         style: Style {
+    |                                ^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `TextStyle` in this scope
+   --> src/rendering.rs:316:29
+    |
+316 | ...                   TextStyle {
+    |                       ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `TextBundle` in this scope
+   --> src/rendering.rs:327:17
+    |
+327 |                 TextBundle {
+    |                 ^^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `TextStyle` in this scope
+   --> src/rendering.rs:330:25
+    |
+330 |                         TextStyle {
+    |                         ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Style` in this scope
+   --> src/rendering.rs:336:28
+    |
+336 |                     style: Style {
+    |                            ^^^^^ not found in this scope
+
+error[E0425]: cannot find type `Style` in this scope
+   --> src/rendering.rs:355:35
+    |
+355 |     mut hud_container: Query<&mut Style, With<HudContainer>>,
+    |                                   ^^^^^ not found in this scope
+    |
+help: you might be missing a type parameter
+    |
+352 | pub fn update_ui<Style>(
+    |                 +++++++
+
+error[E0599]: no method named `finished` found for struct `bevy::prelude::Timer` in the current scope
+   --> src/input.rs:101:35
+    |
+101 |                 if movement.timer.finished() {
+    |                                   ^^^^^^^^ private field, not a method
+    |
+help: there is a method `finish` with a similar name
+    |
+101 -                 if movement.timer.finished() {
+101 +                 if movement.timer.finish() {
+    |
+
+error[E0614]: type `char` cannot be dereferenced
+   --> src/logic.rs:355:66
+    |
+355 |                 GameAction::KeyPressed(c) => current_name.0.push(*c),
+    |                                                                  ^^ can't be dereferenced
+
+error[E0599]: no method named `get_single_mut` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/logic.rs:382:59
+    |
+382 | ...   let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
+    |                                                 ^^^^^^^^^^^^^^
+    |
+    = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-2609610244522736962.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: there is a method `single_mut` with a similar name
+    |
+382 -                 let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
+382 +                 let Ok((entity, mut piece)) = piece_query.single_mut() else {
+    |
+
+error[E0433]: cannot find type `Camera2dBundle` in this scope
+  --> src/rendering.rs:64:20
+   |
+64 |     commands.spawn(Camera2dBundle::default());
+   |                    ^^^^^^^^^^^^^^ use of undeclared type `Camera2dBundle`
+
+error[E0599]: no method named `width` found for enum `Result<T, E>` in the current scope
+   --> src/rendering.rs:158:24
+    |
+158 |     let win_w = window.width();
+    |                        ^^^^^ method not found in `Result<&bevy::prelude::Window, QuerySingleError>`
+    |
+note: the method `width` exists on the type `&bevy::prelude::Window`
+   --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_window-0.19.0/src/window.rs:562:5
+    |
+562 |     pub fn width(&self) -> f32 {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `&bevy::prelude::Window` value, panicking if the value is a `Result::Err`
+    |
+158 |     let win_w = window.expect("REASON").width();
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `height` found for enum `Result<T, E>` in the current scope
+   --> src/rendering.rs:159:24
+    |
+159 |     let win_h = window.height();
+    |                        ^^^^^^ method not found in `Result<&bevy::prelude::Window, QuerySingleError>`
+    |
+note: the method `height` exists on the type `&bevy::prelude::Window`
+   --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_window-0.19.0/src/window.rs:570:5
+    |
+570 |     pub fn height(&self) -> f32 {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `&bevy::prelude::Window` value, panicking if the value is a `Result::Err`
+    |
+159 |     let win_h = window.expect("REASON").height();
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `get_single_mut` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/rendering.rs:177:60
+    |
+177 | ...te, mut trans)) = board_bg.get_single_mut() {
+    |                               ^^^^^^^^^^^^^^
+    |
+    = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-2942103338812108264.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: there is a method `single_mut` with a similar name
+    |
+177 -     if let Ok((mut vis, mut sprite, mut trans)) = board_bg.get_single_mut() {
+177 +     if let Ok((mut vis, mut sprite, mut trans)) = board_bg.single_mut() {
+    |
+
+error[E0599]: no method named `get_single_mut` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/rendering.rs:191:59
+    |
+191 | ...ite, mut trans)) = next_bg.get_single_mut() {
+    |                               ^^^^^^^^^^^^^^
+    |
+    = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-406762191436252539.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: there is a method `single_mut` with a similar name
+    |
+191 -     if let Ok((mut vis, mut sprite, mut trans)) = next_bg.get_single_mut() {
+191 +     if let Ok((mut vis, mut sprite, mut trans)) = next_bg.single_mut() {
+    |
+
+error[E0599]: no method named `get_single` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/rendering.rs:230:38
+    |
+230 |     if let Ok(piece) = current_piece.get_single() {
+    |                                      ^^^^^^^^^^
+    |
+help: there is a method `single` with a similar name
+    |
+230 -     if let Ok(piece) = current_piece.get_single() {
+230 +     if let Ok(piece) = current_piece.single() {
+    |
+
+error[E0433]: cannot find type `TextBundle` in this scope
+   --> src/rendering.rs:314:25
+    |
+314 |                         TextBundle::from_section(
+    |                         ^^^^^^^^^^ use of undeclared type `TextBundle`
+
+error[E0599]: no associated function or constant named `from_section` found for struct `bevy::prelude::Text` in the current scope
+   --> src/rendering.rs:328:33
+    |
+328 |                     text: Text::from_section(
+    |                                 ^^^^^^^^^^^^ associated function or constant not found in `bevy::prelude::Text`
+    |
+note: if you're trying to build a new `bevy::prelude::Text`, consider using `bevy::prelude::Text::new` which returns `bevy::prelude::Text`
+   --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_ui-0.19.0/src/widget/text.rs:115:5
+    |
+115 |     pub fn new(text: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `width` found for enum `Result<T, E>` in the current scope
+   --> src/rendering.rs:368:24
+    |
+368 |     let win_w = window.width();
+    |                        ^^^^^ method not found in `Result<&bevy::prelude::Window, QuerySingleError>`
+    |
+note: the method `width` exists on the type `&bevy::prelude::Window`
+   --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_window-0.19.0/src/window.rs:562:5
+    |
+562 |     pub fn width(&self) -> f32 {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `&bevy::prelude::Window` value, panicking if the value is a `Result::Err`
+    |
+368 |     let win_w = window.expect("REASON").width();
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `height` found for enum `Result<T, E>` in the current scope
+   --> src/rendering.rs:369:24
+    |
+369 |     let win_h = window.height();
+    |                        ^^^^^^ method not found in `Result<&bevy::prelude::Window, QuerySingleError>`
+    |
+note: the method `height` exists on the type `&bevy::prelude::Window`
+   --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_window-0.19.0/src/window.rs:570:5
+    |
+570 |     pub fn height(&self) -> f32 {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: consider using `Result::expect` to unwrap the `&bevy::prelude::Window` value, panicking if the value is a `Result::Err`
+    |
+369 |     let win_h = window.expect("REASON").height();
+    |                       +++++++++++++++++
+
+error[E0599]: no method named `get_single_mut` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/rendering.rs:386:38
+    |
+386 |     if let Ok(mut text) = score_text.get_single_mut() {
+    |                                      ^^^^^^^^^^^^^^
+    |
+    = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-2915259363475026296.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: there is a method `single_mut` with a similar name
+    |
+386 -     if let Ok(mut text) = score_text.get_single_mut() {
+386 +     if let Ok(mut text) = score_text.single_mut() {
+    |
+
+error[E0599]: no method named `get_single_mut` found for struct `bevy::prelude::Query<'world, 'state, D, F>` in the current scope
+   --> src/rendering.rs:413:61
+    |
+413 | ...bility)) = high_score_text.get_single_mut() {
+    |                               ^^^^^^^^^^^^^^
+    |
+    = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-18046570035125405726.txt'
+    = note: consider using `--verbose` to print the full type name to the console
+help: there is a method `single_mut` with a similar name
+    |
+413 -     if let Ok((mut text, mut visibility)) = high_score_text.get_single_mut() {
+413 +     if let Ok((mut text, mut visibility)) = high_score_text.single_mut() {
+    |
+
+error[E0277]: the trait bound `WindowResolution: From<({float}, {float})>` is not satisfied
+    --> src/main.rs:20:44
+     |
+  20 |                 resolution: (600.0, 800.0).into(),
+     |                                            ^^^^ the trait `From<({float}, {float})>` is not implemented for `WindowResolution`
+     |
+help: `WindowResolution` implements trait `From<T>`
+    --> /home/geminiuser/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/bevy_window-0.19.0/src/window.rs:1046:1
+     |
+1046 | impl From<(u32, u32)> for WindowResolution {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<(u32, u32)>`
+...
+1052 | impl From<[u32; 2]> for WindowResolution {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<[u32; 2]>`
+...
+1058 | impl From<UVec2> for WindowResolution {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `From<UVec2>`
+     = note: required for `({float}, {float})` to implement `Into<WindowResolution>`
+
+error[E0599]: no method named `add_event` found for mutable reference `&mut bevy::prelude::App` in the current scope
+  --> src/main.rs:25:10
+   |
+16 | /     App::new()
+17 | |         .add_plugins(DefaultPlugins.set(WindowPlugin {
+18 | |             primary_window: Some(Window {
+19 | |                 title: "Bevy Tetris".into(),
+...  |
+24 | |         }))
+25 | |         .add_event::<GameAction>()
+   | |         -^^^^^^^^^ method not found in `&mut bevy::prelude::App`
+   | |_________|
+   |
+
+error[E0599]: the method `chain` exists for tuple `(..., ..., ..., ..., ..., ...)`, but its trait bounds were not satisfied
+  --> src/main.rs:54:18
+   |
+46 | /             (
+47 | |                 gui_input,
+48 | |                 apply_gravity,
+49 | |                 handle_actions,
+...  |
+54 | |                 .chain(),
+   | |                 -^^^^^ method cannot be called on `(..., ..., ..., ..., ..., ...)` due to unsatisfied trait bounds
+   | |_________________|
+   |
+   |
+   = note: the following trait bounds were not satisfied:
+           `(for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): Curve<_>`
+           which is required by `(for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): bevy::prelude::CurveExt<_>`
+           `&(for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): Curve<_>`
+           which is required by `&(for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): bevy::prelude::CurveExt<_>`
+           `&mut (for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): Curve<_>`
+           which is required by `&mut (for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): bevy::prelude::CurveExt<_>`
+           `(for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): Iterator`
+           which is required by `&mut (for<'a, 'b, 'c, 'd> fn(bevy::prelude::Res<'a, bevy::prelude::ButtonInput<bevy::prelude::KeyCode>>, {type error}, {type error}, {type error}, bevy::prelude::Res<'b, logic::AppMode>, bevy::prelude::Res<'c, bevy::prelude::Time>, bevy::prelude::ResMut<'d, logic::MovementTimer>) {input::gui_input}, for<'a, 'b, 'c> fn(bevy::prelude::Res<'a, bevy::prelude::Time>, bevy::prelude::ResMut<'b, logic::GravityTimer>, {type error}, bevy::prelude::Res<'c, logic::AppMode>) {logic::apply_gravity}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l> fn({type error}, bevy::prelude::ResMut<'a, logic::Board>, bevy::prelude::Query<'b, 'c, (bevy::prelude::Entity, &'d mut CurrentPiece)>, bevy::prelude::Commands<'e, 'f>, bevy::prelude::ResMut<'g, logic::GameState>, bevy::prelude::ResMut<'h, logic::GravityTimer>, bevy::prelude::ResMut<'i, logic::AppMode>, bevy::prelude::ResMut<'j, logic::HighScores>, bevy::prelude::ResMut<'k, logic::CurrentName>, bevy::prelude::ResMut<'l, logic::PieceBag>) {logic::handle_actions}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::ResMut<'c, logic::PieceBag>, bevy::prelude::Query<'d, 'e, bevy::prelude::Entity, bevy::prelude::With<CurrentPiece>>, bevy::prelude::Res<'f, logic::Board>, bevy::prelude::ResMut<'g, logic::AppMode>, bevy::prelude::Res<'h, logic::GameState>, bevy::prelude::ResMut<'i, logic::HighScores>) {logic::spawn_piece}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's, 't, 'u, 'v, 'w, 'x, 'y, 'z, 'z0> fn(bevy::prelude::Commands<'a, 'b>, bevy::prelude::Res<'c, logic::Board>, bevy::prelude::Query<'d, 'e, &'f CurrentPiece>, bevy::prelude::Res<'g, logic::PieceBag>, bevy::prelude::Res<'h, logic::AppMode>, bevy::prelude::Query<'i, 'j, bevy::prelude::Entity, bevy::prelude::With<BoardBlock>>, bevy::prelude::Query<'k, 'l, bevy::prelude::Entity, bevy::prelude::With<CurrentPieceBlock>>, bevy::prelude::Query<'m, 'n, bevy::prelude::Entity, bevy::prelude::With<NextPieceBlock>>, bevy::prelude::Query<'o, 'p, (&'q mut bevy::prelude::Visibility, &'r mut bevy::prelude::Sprite, &'s mut bevy::prelude::Transform), (bevy::prelude::With<BoardBackground>, bevy::prelude::Without<NextBackground>)>, bevy::prelude::Query<'t, 'u, (&'v mut bevy::prelude::Visibility, &'w mut bevy::prelude::Sprite, &'x mut bevy::prelude::Transform), (bevy::prelude::With<NextBackground>, bevy::prelude::Without<BoardBackground>)>, bevy::prelude::Query<'y, 'z, &'z0 bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::render_board}, for<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p, 'q, 'r, 's> fn(bevy::prelude::Query<'a, 'b, &'c mut bevy::prelude::Text, (bevy::prelude::With<ScoreText>, bevy::prelude::Without<HighScoreText>)>, bevy::prelude::Query<'d, 'e, (&'f mut bevy::prelude::Text, &'g mut bevy::prelude::Visibility), bevy::prelude::With<HighScoreText>>, bevy::prelude::Query<'h, 'i, &'j mut {type error}, bevy::prelude::With<HudContainer>>, bevy::prelude::Res<'k, logic::GameState>, bevy::prelude::Res<'l, logic::AppMode>, bevy::prelude::Res<'m, logic::HighScores>, bevy::prelude::Res<'n, logic::CurrentName>, bevy::prelude::Res<'o, logic::GravityTimer>, bevy::prelude::ResMut<'p, bevy::prelude::ClearColor>, bevy::prelude::Query<'q, 'r, &'s bevy::prelude::Window, bevy::prelude::With<PrimaryWindow>>) {rendering::update_ui}): Iterator`
+   = note: the full name for the type has been written to '/home/geminiuser/tetrisclone/target/debug/deps/tetrisclone-0f7ce79acfbe3835.long-type-3109156755760341258.txt'
+   = note: consider using `--verbose` to print the full type name to the console
+
+Some errors have detailed explanations: E0277, E0422, E0425, E0433, E0599, E0614.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `tetrisclone` (bin "tetrisclone") due to 37 previous errors

@@ -241,7 +241,7 @@ impl Default for GravityTimer {
     }
 }
 
-#[derive(Event)]
+#[derive(Message)]
 pub enum GameAction {
     MoveLeft,
     MoveRight,
@@ -312,16 +312,16 @@ pub fn spawn_piece(
 pub fn apply_gravity(
     time: Res<Time>,
     mut timer: ResMut<GravityTimer>,
-    mut actions: EventWriter<GameAction>,
+    mut actions: MessageWriter<GameAction>,
     app_mode: Res<AppMode>,
 ) {
     if *app_mode == AppMode::Playing && timer.0.tick(time.delta()).just_finished() {
-        actions.send(GameAction::GravityStep);
+        actions.write(GameAction::GravityStep);
     }
 }
 
 pub fn handle_actions(
-    mut actions: EventReader<GameAction>,
+    mut actions: MessageReader<GameAction>,
     mut board: ResMut<Board>,
     mut piece_query: Query<(Entity, &mut CurrentPiece)>,
     mut commands: Commands,
@@ -379,7 +379,7 @@ pub fn handle_actions(
                     *app_mode = AppMode::Paused;
                     continue;
                 }
-                let Ok((entity, mut piece)) = piece_query.get_single_mut() else {
+                let Ok((entity, mut piece)) = piece_query.single_mut() else {
                     continue;
                 };
                 match action {

@@ -4,9 +4,9 @@ use bevy::prelude::*;
 
 pub fn gui_input(
     keyboard: Res<ButtonInput<KeyCode>>,
-    mut kbd_evr: EventReader<KeyboardInput>,
-    mut actions: EventWriter<GameAction>,
-    mut exit: EventWriter<bevy::app::AppExit>,
+    mut kbd_evr: MessageReader<KeyboardInput>,
+    mut actions: MessageWriter<GameAction>,
+    mut exit: MessageWriter<bevy::app::AppExit>,
     app_mode: Res<AppMode>,
     time: Res<Time>,
     mut movement: ResMut<MovementTimer>,
@@ -22,9 +22,9 @@ pub fn gui_input(
 
             if ev.key_code == KeyCode::KeyQ {
                 if *app_mode == AppMode::HighScore {
-                    exit.send(bevy::app::AppExit::Success);
+                    exit.write(bevy::app::AppExit::Success);
                 } else {
-                    actions.send(GameAction::ReturnToMenu);
+                    actions.write(GameAction::ReturnToMenu);
                 }
                 return;
             }
@@ -32,39 +32,39 @@ pub fn gui_input(
             match *app_mode {
                 AppMode::HighScore => {
                     if is_arrow(ev.key_code) || ev.key_code == KeyCode::Enter {
-                        actions.send(GameAction::StartGame);
+                        actions.write(GameAction::StartGame);
                     }
                 }
                 AppMode::Naming => {
                     if ev.key_code == KeyCode::Enter {
-                        actions.send(GameAction::SubmitName);
+                        actions.write(GameAction::SubmitName);
                     } else if ev.key_code == KeyCode::Backspace {
-                        actions.send(GameAction::Backspace);
+                        actions.write(GameAction::Backspace);
                     } else if let Key::Character(c) = &ev.logical_key {
                         for ch in c.chars() {
                             if !ch.is_control() {
-                                actions.send(GameAction::KeyPressed(ch));
+                                actions.write(GameAction::KeyPressed(ch));
                             }
                         }
                     }
                 }
                 AppMode::Paused => {
                     if is_arrow(ev.key_code) {
-                        actions.send(GameAction::Resume);
+                        actions.write(GameAction::Resume);
                     }
                 }
                 AppMode::Playing => match ev.key_code {
                     KeyCode::KeyP => {
-                        actions.send(GameAction::Pause);
+                        actions.write(GameAction::Pause);
                     }
                     KeyCode::ArrowDown => {
-                        actions.send(GameAction::MoveDown);
+                        actions.write(GameAction::MoveDown);
                     }
                     KeyCode::ArrowUp | KeyCode::KeyZ => {
-                        actions.send(GameAction::Rotate);
+                        actions.write(GameAction::Rotate);
                     }
                     KeyCode::ArrowLeft => {
-                        actions.send(GameAction::MoveLeft);
+                        actions.write(GameAction::MoveLeft);
                         movement.key = Some(KeyCode::ArrowLeft);
                         movement
                             .timer
@@ -72,7 +72,7 @@ pub fn gui_input(
                         movement.timer.reset();
                     }
                     KeyCode::ArrowRight => {
-                        actions.send(GameAction::MoveRight);
+                        actions.write(GameAction::MoveRight);
                         movement.key = Some(KeyCode::ArrowRight);
                         movement
                             .timer
@@ -98,13 +98,13 @@ pub fn gui_input(
             // Note: keyboard.pressed() reflects the state as of the start of this frame.
             if keyboard.pressed(key) {
                 movement.timer.tick(time.delta());
-                if movement.timer.finished() {
+                if movement.timer.just_finished() {
                     let action = if key == KeyCode::ArrowLeft {
                         GameAction::MoveLeft
                     } else {
                         GameAction::MoveRight
                     };
-                    actions.send(action);
+                    actions.write(action);
                     movement
                         .timer
                         .set_duration(std::time::Duration::from_secs_f32(0.05));
